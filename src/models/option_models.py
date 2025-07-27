@@ -1,0 +1,50 @@
+from pydantic import BaseModel
+from typing import Optional, List
+from datetime import datetime
+
+class OptionData(BaseModel):
+    openInterest: int
+    changeinOpenInterest: int
+    pchangeinOpenInterest: float
+    totalTradedVolume: int
+    impliedVolatility: float
+    lastPrice: float
+    change: float
+    pChange: float
+    totalBuyQuantity: int
+    totalSellQuantity: int
+    bidQty: int
+    bidprice: float
+    askQty: int
+    askPrice: float
+
+class OptionStrike(BaseModel):
+    strikePrice: float
+    expiryDate: str
+    CE: Optional[OptionData] = None
+    PE: Optional[OptionData] = None
+
+class OptionChainRecords(BaseModel):
+    expiryDates: List[str]
+    data: List[OptionStrike]
+    strikePrices: List[float]
+    underlyingValue: float
+
+class OptionChainResponse(BaseModel):
+    records: OptionChainRecords
+    filtered: dict
+
+class OptionChainRequest(BaseModel):
+    symbol: str = "RELIANCE"
+
+class APIResponse(BaseModel):
+    success: bool
+    message: str
+    data: Optional[dict] = None
+    timestamp: datetime = datetime.now()
+
+class HealthResponse(BaseModel):
+    status: str
+    timestamp: datetime
+    service: str
+    version: str
