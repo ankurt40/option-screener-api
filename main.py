@@ -18,6 +18,8 @@ import logging
 from datetime import datetime
 
 from controllers.option_chain_controller import router as option_chain_router
+from controllers.option_controller import router as option_router
+from controllers.corporate_announcements_controller import router as corporate_router
 from models.option_models import HealthResponse
 
 # Configure logging
@@ -47,6 +49,8 @@ app.add_middleware(
 
 # Include routers
 app.include_router(option_chain_router)
+app.include_router(option_router)
+app.include_router(corporate_router)
 
 @app.get("/", response_model=HealthResponse)
 async def root():
