@@ -2,19 +2,66 @@ import httpx
 import asyncio
 from typing import Dict, Any, Optional
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
+from nse import NSE
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class NSEService:
-    """Service class to handle NSE API interactions"""
+    """Service class to handle NSE API interactions with caching"""
 
     def __init__(self):
         self.session: Optional[httpx.AsyncClient] = None
         self.cookies: Dict[str, str] = {}
         self.base_url = "https://www.nseindia.com"
+        # Cache storage: symbol -> {"data": data, "timestamp": datetime}
+        self._cache: Dict[str, Dict[str, Any]] = {}
+        self._cache_duration = timedelta(minutes=15)  # 15 minutes cache
+        # Initialize NSE client with download folder
+        self.nse_client = NSE(download_folder='/tmp')
+
+    def _is_cache_valid(self, symbol: str) -> bool:
+        """Check if cached data for symbol is still valid"""
+        if symbol not in self._cache:
+            return False
+
+        cache_entry = self._cache[symbol]
+        cache_time = cache_entry.get("timestamp")
+
+        if not cache_time:
+            return False
+
+        return datetime.now() - cache_time < self._cache_duration
+
+    def _get_cached_data(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """Get cached data for symbol if valid"""
+        if self._is_cache_valid(symbol):
+            logger.info(f"🎯 Using cached data for {symbol}")
+            return self._cache[symbol]["data"]
+        return None
+
+    def _store_in_cache(self, symbol: str, data: Dict[str, Any]) -> None:
+        """Store data in cache with current timestamp"""
+        self._cache[symbol] = {
+            "data": data,
+            "timestamp": datetime.now()
+        }
+        logger.info(f"💾 Cached data for {symbol} (expires in 15 minutes)")
+
+    def _clear_expired_cache(self) -> None:
+        """Clear expired cache entries to prevent memory buildup"""
+        now = datetime.now()
+        expired_symbols = []
+
+        for symbol, cache_entry in self._cache.items():
+            if now - cache_entry["timestamp"] >= self._cache_duration:
+                expired_symbols.append(symbol)
+
+        for symbol in expired_symbols:
+            del self._cache[symbol]
+            logger.info(f"🗑️ Cleared expired cache for {symbol}")
 
     async def get_session(self) -> httpx.AsyncClient:
         """Initialize session with NSE website to get cookies"""
@@ -47,167 +94,109 @@ class NSEService:
         return self.session
 
     async def fetch_option_chain(self, symbol: str) -> Dict[str, Any]:
-        """Fetch option chain data from NSE API"""
+        """Fetch option chain data from NSE using nse library with caching"""
         logger.info(f"🔄 Fetching option chain for symbol: {symbol}")
-        session = await self.get_session()
 
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': '*/*',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Referer': f'{self.base_url}/option-chain',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"macOS"'
-        }
+        # Clean up expired cache entries periodically
+        self._clear_expired_cache()
 
-        api_url = f'{self.base_url}/api/option-chain-equities?symbol={symbol.upper()}'
+        # Check cache first
+        cached_data = self._get_cached_data(symbol)
+        if cached_data:
+            return cached_data
+
+        logger.info(f"📡 Cache miss for {symbol}, fetching from NSE using nse library...")
 
         try:
-            response = await session.get(api_url, headers=headers, cookies=self.cookies)
-            logger.info(f"📊 NSE API Response: {response.status_code} for {symbol}")
+            # Use the nse library to fetch option chain data
+            option_chain_data = self.nse_client.optionchain(symbol.upper())
 
-            if response.status_code == 200:
-                data = response.json()
-                logger.info(f"✅ Successfully fetched option chain for {symbol}")
-                return data
-
-            elif response.status_code == 401:
-                logger.warning(f"🔄 401 error for {symbol}, refreshing session...")
-                # Reset session and try once more
-                await self._reset_session()
-                return await self._retry_fetch_option_chain(symbol, api_url, headers)
-
+            if option_chain_data:
+                logger.info(f"✅ Successfully fetched option chain for {symbol} using nse library")
+                # Store in cache
+                self._store_in_cache(symbol, option_chain_data)
+                return option_chain_data
             else:
-                logger.error(f"❌ NSE API error for {symbol}: {response.status_code}")
-                return self._generate_mock_data(symbol)
+                logger.error(f"❌ No option chain data returned from nse library for {symbol}")
+                raise Exception(f"No option chain data available for {symbol}")
+
+        except AttributeError as e:
+            logger.warning(f"⚠️ NSE library method 'optionchain' not available: {e}")
+            logger.info(f"🔄 Trying alternative method to get option chain for {symbol}...")
+
+            try:
+                # Try alternative approach - get option chain using different method
+                # Some versions of nse library might have different method names
+                alternative_data = self.nse_client.get_option_chain(symbol.upper())
+
+                if alternative_data:
+                    logger.info(f"✅ Successfully fetched option chain for {symbol} using alternative method")
+                    # Store in cache
+                    self._store_in_cache(symbol, alternative_data)
+                    return alternative_data
+                else:
+                    logger.error(f"❌ No data from alternative method for {symbol}")
+                    raise Exception(f"No option chain data available for {symbol}")
+
+            except Exception as e2:
+                logger.error(f"❌ Alternative method also failed for {symbol}: {e2}")
+                raise Exception(f"Failed to fetch option chain for {symbol}: {str(e2)}")
 
         except Exception as e:
-            logger.error(f"❌ Exception fetching {symbol}: {e}")
-            return self._generate_mock_data(symbol)
+            logger.error(f"❌ Exception fetching option chain for {symbol} using nse library: {e}")
+            raise Exception(f"Failed to fetch option chain for {symbol}: {str(e)}")
+
+    async def list_fno_stocks(self) -> Dict[str, Any]:
+        """Fetch list of F&O (Futures and Options) stocks from NSE using nse library"""
+        logger.info("🔄 Fetching F&O stocks list from NSE using nse library")
+
+        # Check cache first (using 'FNO_STOCKS' as cache key)
+        cached_data = self._get_cached_data('FNO_STOCKS')
+        if cached_data:
+            return cached_data
+
+        logger.info("📡 Cache miss for F&O stocks, fetching from NSE using nse library...")
+
+        try:
+            # Use the correct method to fetch F&O stocks
+            # The listFnoStocks() method is deprecated, use listEquityStocksByIndex instead
+            fno_data = self.nse_client.listEquityStocksByIndex(index='SECURITIES IN F&O')
+
+            if fno_data and 'data' in fno_data:
+                logger.info("✅ Successfully fetched F&O stocks using nse library")
+
+                # Transform the data to our expected format
+                stocks_list = fno_data['data']
+                formatted_data = {
+                    "data": stocks_list,
+                    "total": len(stocks_list),
+                    "message": "F&O stocks list retrieved successfully using nse library"
+                }
+
+                # Store in cache
+                self._store_in_cache('FNO_STOCKS', formatted_data)
+                return formatted_data
+            else:
+                logger.error("❌ No F&O stocks data returned from nse library")
+                raise Exception("No F&O stocks data available")
+
+        except Exception as e:
+            logger.error(f"❌ Exception fetching F&O stocks using nse library: {e}")
+            raise Exception(f"Failed to fetch F&O stocks: {str(e)}")
 
     async def _reset_session(self):
-        """Reset the session and cookies"""
+        """Reset the session and cookies - kept for backward compatibility"""
         if self.session:
             await self.session.aclose()
         self.session = None
         self.cookies = {}
 
-    async def _retry_fetch_option_chain(self, symbol: str, api_url: str, headers: Dict[str, str]) -> Dict[str, Any]:
-        """Retry fetching option chain after session reset"""
-        session = await self.get_session()
-
-        try:
-            retry_response = await session.get(api_url, headers=headers, cookies=self.cookies)
-            if retry_response.status_code == 200:
-                data = retry_response.json()
-                logger.info(f"✅ Retry successful for {symbol}")
-                return data
-            else:
-                logger.error(f"❌ Retry failed for {symbol}: {retry_response.status_code}")
-                return self._generate_mock_data(symbol)
-        except Exception as e:
-            logger.error(f"❌ Retry exception for {symbol}: {e}")
-            return self._generate_mock_data(symbol)
-
-    def _generate_mock_data(self, symbol: str) -> Dict[str, Any]:
-        """Generate realistic mock data for development"""
-        logger.info(f"🎭 Generating mock data for {symbol}")
-
-        symbol_prices = {
-            'RELIANCE': 1285.45,
-            'TCS': 4250.75,
-            'HDFCBANK': 1685.90,
-            'INFY': 1825.30,
-            'ITC': 465.20,
-            'HINDUNILVR': 2450.80,
-            'WIPRO': 495.60,
-            'SBIN': 825.40
-        }
-
-        base_price = symbol_prices.get(symbol.upper(), 1500.00)
-        strikes = self._generate_strikes(symbol, base_price)
-        option_data = self._generate_option_data(symbol, base_price, strikes)
-
-        return {
-            'records': {
-                'expiryDates': ['2025-01-30', '2025-02-27', '2025-03-27'],
-                'underlyingValue': base_price,
-                'strikePrices': strikes,
-                'data': option_data
-            },
-            'filtered': {
-                'data': option_data
-            }
-        }
-
-    def _generate_strikes(self, symbol: str, base_price: float) -> list:
-        """Generate strike prices based on symbol and base price"""
-        strikes = []
-
-        # Determine strike interval based on price level
-        if base_price > 3000:  # TCS, HINDUNILVR
-            interval = 50
-        elif base_price > 1000:  # RELIANCE, HDFCBANK, INFY
-            interval = 25
-        else:  # ITC, others
-            interval = 10
-
-        # Generate strikes around base price
-        for i in range(-15, 16):
-            strikes.append(base_price + (i * interval))
-
-        return sorted(strikes)
-
-    def _generate_option_data(self, symbol: str, base_price: float, strikes: list) -> list:
-        """Generate realistic option data for each strike"""
-        option_data = []
-
-        for strike in strikes:
-            # Use hash for deterministic but realistic random data
-            seed = hash(f"{symbol}{strike}")
-
-            option_data.append({
-                'strikePrice': strike,
-                'expiryDate': '2025-01-30',
-                'CE': self._generate_option_details(symbol, strike, base_price, 'CE', seed),
-                'PE': self._generate_option_details(symbol, strike, base_price, 'PE', seed)
-            })
-
-        return option_data
-
-    def _generate_option_details(self, symbol: str, strike: float, base_price: float, option_type: str, seed: int) -> Dict[str, Any]:
-        """Generate detailed option data for CE or PE"""
-        import random
-        random.seed(seed + hash(option_type))
-
-        # Calculate intrinsic value
-        if option_type == 'CE':
-            intrinsic = max(0, base_price - strike)
-        else:
-            intrinsic = max(0, strike - base_price)
-
-        # Add time value
-        time_value = random.uniform(1, 50)
-        last_price = max(0.05, intrinsic + time_value)
-
-        return {
-            'openInterest': random.randint(5000, 50000),
-            'changeinOpenInterest': random.randint(-5000, 5000),
-            'pchangeinOpenInterest': random.uniform(-25, 25),
-            'totalTradedVolume': random.randint(500, 20000),
-            'impliedVolatility': random.uniform(12, 30),
-            'lastPrice': round(last_price, 2),
-            'change': random.uniform(-10, 10),
-            'pChange': random.uniform(-15, 15),
-            'totalBuyQuantity': random.randint(1000, 30000),
-            'totalSellQuantity': random.randint(1000, 30000),
-            'bidQty': random.randint(50, 1000),
-            'bidprice': max(0.05, round(last_price - 0.25, 2)),
-            'askQty': random.randint(50, 1000),
-            'askPrice': round(last_price + 0.25, 2)
-        }
+    # Note: The _retry_fetch_option_chain method is no longer needed since we use nse library
+    # Keeping the method signature for backward compatibility but redirecting to main method
+    async def _retry_fetch_option_chain(self, symbol: str, api_url: str = None, headers: Dict[str, str] = None) -> Dict[str, Any]:
+        """Legacy retry method - now redirects to main fetch_option_chain method"""
+        logger.info(f"🔄 Legacy retry called for {symbol}, using nse library method...")
+        return await self.fetch_option_chain(symbol)
 
     async def close_session(self):
         """Close the HTTP session"""
