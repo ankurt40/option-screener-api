@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 import logging
 from datetime import datetime
+import asyncio
 
 from models.option_models import VolatileOptionsResponse, APIResponse
 from services.analytics_service import analytics_service
@@ -179,3 +180,41 @@ async def get_cache_stats():
     except Exception as e:
         logger.error(f"❌ Error getting cache stats: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get cache stats: {str(e)}")
+
+@router.get("/top-volatile-options-all", response_model=VolatileOptionsResponse)
+async def get_top_volatile_options_all():
+    """
+    Fetch top volatile options for all F&O stocks by analyzing option chain data for each symbol
+
+    This endpoint:
+    - Retrieves all F&O stocks from cache
+    - Analyzes option chains for each symbol with 2-second delay only when fetching fresh data
+    - Returns combined list of Strike objects with detailed option data
+
+    Returns aggregated list of Strike objects with:
+    - Strike prices and expiry dates for all symbols
+    - Open Interest and changes
+    - Volume and Implied Volatility
+    - Price data and market depth
+    - Option type (PE/CE)
+    """
+    try:
+        # Use analytics service to get volatile options for all stocks
+        all_strikes = await analytics_service.get_volatile_options_for_all_stocks()
+
+        return VolatileOptionsResponse(
+            success=True,
+            message=f"Top volatile options retrieved for all F&O stocks. Found {len(all_strikes)} total strikes.",
+            data=all_strikes,
+            timestamp=datetime.now()
+        )
+
+    except ValueError as e:
+        logger.error(f"❌ Validation error in all symbols volatile options analysis: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"❌ Unexpected error in all symbols volatile options analysis: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error while analyzing volatile options for all symbols"
+        )

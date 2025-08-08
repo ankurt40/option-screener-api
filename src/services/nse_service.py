@@ -18,7 +18,7 @@ class NSEService:
         self.base_url = "https://www.nseindia.com"
         # Cache storage: symbol -> {"data": data, "timestamp": datetime}
         self._cache: Dict[str, Dict[str, Any]] = {}
-        self._cache_duration = timedelta(minutes=15)  # 15 minutes cache
+        self._cache_duration = timedelta(minutes=60)  # 1 hour cache
         # Initialize NSE client with download folder
         self.nse_client = NSE(download_folder='/tmp')
 
@@ -48,7 +48,7 @@ class NSEService:
             "data": data,
             "timestamp": datetime.now()
         }
-        logger.info(f"💾 Cached data for {symbol} (expires in 15 minutes)")
+        logger.info(f"💾 Cached data for {symbol} (expires in 60 minutes)")
 
     def _clear_expired_cache(self) -> None:
         """Clear expired cache entries to prevent memory buildup"""
@@ -108,8 +108,8 @@ class NSEService:
         logger.info(f"📡 Cache miss for {symbol}, fetching from NSE using nse library...")
 
         try:
-            # Use the nse library to fetch option chain data
-            option_chain_data = self.nse_client.optionchain(symbol.upper())
+            # Use the correct method name from NSE library
+            option_chain_data = self.nse_client.optionChain(symbol.upper())
 
             if option_chain_data:
                 logger.info(f"✅ Successfully fetched option chain for {symbol} using nse library")
@@ -119,28 +119,6 @@ class NSEService:
             else:
                 logger.error(f"❌ No option chain data returned from nse library for {symbol}")
                 raise Exception(f"No option chain data available for {symbol}")
-
-        except AttributeError as e:
-            logger.warning(f"⚠️ NSE library method 'optionchain' not available: {e}")
-            logger.info(f"🔄 Trying alternative method to get option chain for {symbol}...")
-
-            try:
-                # Try alternative approach - get option chain using different method
-                # Some versions of nse library might have different method names
-                alternative_data = self.nse_client.get_option_chain(symbol.upper())
-
-                if alternative_data:
-                    logger.info(f"✅ Successfully fetched option chain for {symbol} using alternative method")
-                    # Store in cache
-                    self._store_in_cache(symbol, alternative_data)
-                    return alternative_data
-                else:
-                    logger.error(f"❌ No data from alternative method for {symbol}")
-                    raise Exception(f"No option chain data available for {symbol}")
-
-            except Exception as e2:
-                logger.error(f"❌ Alternative method also failed for {symbol}: {e2}")
-                raise Exception(f"Failed to fetch option chain for {symbol}: {str(e2)}")
 
         except Exception as e:
             logger.error(f"❌ Exception fetching option chain for {symbol} using nse library: {e}")

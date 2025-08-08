@@ -27,7 +27,7 @@ async def get_fno_stocks():
     - Company name
     - Lot size for trading
 
-    Data is cached for 15 minutes to optimize performance and prevent rate limiting.
+    Data is cached for 25 minutes to optimize performance and prevent rate limiting.
     """
     try:
         logger.info("📋 F&O stocks list request received")
