@@ -235,5 +235,49 @@ class AnalyticsService:
             type=option_type
         )
 
+    def _calculate_strike_analytics(self, strikes: List[Strike]) -> List[Strike]:
+        """
+        Calculate additional analytics for strikes list
+
+        Calculates:
+        - strike_gap = underlyingValue - strikePrice
+        - strike_gap_percentage = (strike_gap / underlyingValue) * 100
+        - premium_percentage = (lastPrice / underlyingValue) * 100
+
+        Args:
+            strikes: List of Strike objects to enhance with analytics
+
+        Returns:
+            List of Strike objects with analytics fields populated
+        """
+        logger.info(f"🔢 Calculating strike analytics for {len(strikes)} strikes")
+
+        for strike in strikes:
+            try:
+                # Calculate strike gap (difference between underlying price and strike price)
+                strike.strikeGap = strike.underlyingValue - strike.strikePrice
+
+                # Calculate strike gap percentage
+                if strike.underlyingValue > 0:
+                    strike.strikeGapPercentage = (strike.strikeGap / strike.underlyingValue) * 100
+                else:
+                    strike.strikeGapPercentage = 0.0
+
+                # Calculate premium percentage (option price as percentage of underlying)
+                if strike.underlyingValue > 0:
+                    strike.premiumPercentage = (strike.lastPrice / strike.underlyingValue) * 100
+                else:
+                    strike.premiumPercentage = 0.0
+
+            except Exception as e:
+                logger.warning(f"⚠️ Failed to calculate analytics for strike {strike.strikePrice}: {e}")
+                # Set default values if calculation fails
+                strike.strikeGap = 0.0
+                strike.strikeGapPercentage = 0.0
+                strike.premiumPercentage = 0.0
+
+        logger.info(f"✅ Strike analytics calculated successfully for {len(strikes)} strikes")
+        return strikes
+
 # Create a singleton instance
 analytics_service = AnalyticsService()

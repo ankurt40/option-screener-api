@@ -70,6 +70,10 @@ class Strike(BaseModel):
     askPrice: float
     underlyingValue: float
     type: str  # "PE" or "CE"
+    # Analytics fields
+    strikeGap: Optional[float] = None
+    strikeGapPercentage: Optional[float] = None
+    premiumPercentage: Optional[float] = None
 
 class VolatileOptionsResponse(BaseModel):
     success: bool

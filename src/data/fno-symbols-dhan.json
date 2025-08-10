@@ -1,0 +1,1790 @@
+{
+  "BSE": [
+    {
+      "SECURITY_ID": "543390",
+      "SYMBOL": "POLICYBZR"
+    },
+    {
+      "SECURITY_ID": "540005",
+      "SYMBOL": "LTIM"
+    },
+    {
+      "SECURITY_ID": "533274",
+      "SYMBOL": "PRESTIGE"
+    },
+    {
+      "SECURITY_ID": "532810",
+      "SYMBOL": "PFC"
+    },
+    {
+      "SECURITY_ID": "533098",
+      "SYMBOL": "NHPC"
+    },
+    {
+      "SECURITY_ID": "507685",
+      "SYMBOL": "WIPRO"
+    },
+    {
+      "SECURITY_ID": "500570",
+      "SYMBOL": "TATAMOTORS"
+    },
+    {
+      "SECURITY_ID": "500271",
+      "SYMBOL": "MFSL"
+    },
+    {
+      "SECURITY_ID": "500510",
+      "SYMBOL": "LT"
+    },
+    {
+      "SECURITY_ID": "532522",
+      "SYMBOL": "PETRONET"
+    },
+    {
+      "SECURITY_ID": "542216",
+      "SYMBOL": "DALBHARAT"
+    },
+    {
+      "SECURITY_ID": "540691",
+      "SYMBOL": "ABCAPITAL"
+    },
+    {
+      "SECURITY_ID": "533206",
+      "SYMBOL": "SJVN"
+    },
+    {
+      "SECURITY_ID": "542066",
+      "SYMBOL": "ATGL"
+    },
+    {
+      "SECURITY_ID": "532483",
+      "SYMBOL": "CANBK"
+    },
+    {
+      "SECURITY_ID": "543232",
+      "SYMBOL": "CAMS"
+    },
+    {
+      "SECURITY_ID": "500257",
+      "SYMBOL": "LUPIN"
+    },
+    {
+      "SECURITY_ID": "532466",
+      "SYMBOL": "OFSS"
+    },
+    {
+      "SECURITY_ID": "539083",
+      "SYMBOL": "INOXWIND"
+    },
+    {
+      "SECURITY_ID": "539876",
+      "SYMBOL": "CROMPTON"
+    },
+    {
+      "SECURITY_ID": "540530",
+      "SYMBOL": "HUDCO"
+    },
+    {
+      "SECURITY_ID": "532822",
+      "SYMBOL": "IDEA"
+    },
+    {
+      "SECURITY_ID": "532514",
+      "SYMBOL": "IGL"
+    },
+    {
+      "SECURITY_ID": "500180",
+      "SYMBOL": "HDFCBANK"
+    },
+    {
+      "SECURITY_ID": "532777",
+      "SYMBOL": "NAUKRI"
+    },
+    {
+      "SECURITY_ID": "512070",
+      "SYMBOL": "UPL"
+    },
+    {
+      "SECURITY_ID": "503100",
+      "SYMBOL": "PHOENIXLTD"
+    },
+    {
+      "SECURITY_ID": "533398",
+      "SYMBOL": "MUTHOOTFIN"
+    },
+    {
+      "SECURITY_ID": "500368",
+      "SYMBOL": "PATANJALI"
+    },
+    {
+      "SECURITY_ID": "532827",
+      "SYMBOL": "PAGEIND"
+    },
+    {
+      "SECURITY_ID": "500049",
+      "SYMBOL": "BEL"
+    },
+    {
+      "SECURITY_ID": "542651",
+      "SYMBOL": "KPITTECH"
+    },
+    {
+      "SECURITY_ID": "543257",
+      "SYMBOL": "IRFC"
+    },
+    {
+      "SECURITY_ID": "532966",
+      "SYMBOL": "TITAGARH"
+    },
+    {
+      "SECURITY_ID": "532779",
+      "SYMBOL": "TORNTPOWER"
+    },
+    {
+      "SECURITY_ID": "500387",
+      "SYMBOL": "SHREECEM"
+    },
+    {
+      "SECURITY_ID": "534816",
+      "SYMBOL": "INDUSTOWER"
+    },
+    {
+      "SECURITY_ID": "500493",
+      "SYMBOL": "BHARATFORG"
+    },
+    {
+      "SECURITY_ID": "500300",
+      "SYMBOL": "GRASIM"
+    },
+    {
+      "SECURITY_ID": "542652",
+      "SYMBOL": "POLYCAB"
+    },
+    {
+      "SECURITY_ID": "500209",
+      "SYMBOL": "INFY"
+    },
+    {
+      "SECURITY_ID": "532555",
+      "SYMBOL": "NTPC"
+    },
+    {
+      "SECURITY_ID": "500103",
+      "SYMBOL": "BHEL"
+    },
+    {
+      "SECURITY_ID": "523642",
+      "SYMBOL": "PIIND"
+    },
+    {
+      "SECURITY_ID": "532488",
+      "SYMBOL": "DIVISLAB"
+    },
+    {
+      "SECURITY_ID": "543220",
+      "SYMBOL": "MAXHEALTH"
+    },
+    {
+      "SECURITY_ID": "500112",
+      "SYMBOL": "SBIN"
+    },
+    {
+      "SECURITY_ID": "500228",
+      "SYMBOL": "JSWSTEEL"
+    },
+    {
+      "SECURITY_ID": "517334",
+      "SYMBOL": "MOTHERSON"
+    },
+    {
+      "SECURITY_ID": "540719",
+      "SYMBOL": "SBILIFE"
+    },
+    {
+      "SECURITY_ID": "500294",
+      "SYMBOL": "NCC"
+    },
+    {
+      "SECURITY_ID": "532648",
+      "SYMBOL": "YESBANK"
+    },
+    {
+      "SECURITY_ID": "532155",
+      "SYMBOL": "GAIL"
+    },
+    {
+      "SECURITY_ID": "540699",
+      "SYMBOL": "DIXON"
+    },
+    {
+      "SECURITY_ID": "532977",
+      "SYMBOL": "BAJAJ-AUTO"
+    },
+    {
+      "SECURITY_ID": "543278",
+      "SYMBOL": "KALYANKJIL"
+    },
+    {
+      "SECURITY_ID": "543940",
+      "SYMBOL": "JIOFIN"
+    },
+    {
+      "SECURITY_ID": "532921",
+      "SYMBOL": "ADANIPORTS"
+    },
+    {
+      "SECURITY_ID": "512599",
+      "SYMBOL": "ADANIENT"
+    },
+    {
+      "SECURITY_ID": "533278",
+      "SYMBOL": "COALINDIA"
+    },
+    {
+      "SECURITY_ID": "500800",
+      "SYMBOL": "TATACONSUM"
+    },
+    {
+      "SECURITY_ID": "500188",
+      "SYMBOL": "HINDZINC"
+    },
+    {
+      "SECURITY_ID": "540222",
+      "SYMBOL": "LAURUSLABS"
+    },
+    {
+      "SECURITY_ID": "532868",
+      "SYMBOL": "DLF"
+    },
+    {
+      "SECURITY_ID": "540173",
+      "SYMBOL": "PNBHOUSING"
+    },
+    {
+      "SECURITY_ID": "526371",
+      "SYMBOL": "NMDC"
+    },
+    {
+      "SECURITY_ID": "517569",
+      "SYMBOL": "KEI"
+    },
+    {
+      "SECURITY_ID": "541450",
+      "SYMBOL": "ADANIGREEN"
+    },
+    {
+      "SECURITY_ID": "500440",
+      "SYMBOL": "HINDALCO"
+    },
+    {
+      "SECURITY_ID": "500477",
+      "SYMBOL": "ASHOKLEY"
+    },
+    {
+      "SECURITY_ID": "500093",
+      "SYMBOL": "CGPOWER"
+    },
+    {
+      "SECURITY_ID": "532461",
+      "SYMBOL": "PNB"
+    },
+    {
+      "SECURITY_ID": "500325",
+      "SYMBOL": "RELIANCE"
+    },
+    {
+      "SECURITY_ID": "500696",
+      "SYMBOL": "HINDUNILVR"
+    },
+    {
+      "SECURITY_ID": "532541",
+      "SYMBOL": "COFORGE"
+    },
+    {
+      "SECURITY_ID": "540376",
+      "SYMBOL": "DMART"
+    },
+    {
+      "SECURITY_ID": "505200",
+      "SYMBOL": "EICHERMOT"
+    },
+    {
+      "SECURITY_ID": "539254",
+      "SYMBOL": "ADANIENSOL"
+    },
+    {
+      "SECURITY_ID": "532175",
+      "SYMBOL": "CYIENT"
+    },
+    {
+      "SECURITY_ID": "517354",
+      "SYMBOL": "HAVELLS"
+    },
+    {
+      "SECURITY_ID": "500312",
+      "SYMBOL": "ONGC"
+    },
+    {
+      "SECURITY_ID": "532482",
+      "SYMBOL": "GRANULES"
+    },
+    {
+      "SECURITY_ID": "500002",
+      "SYMBOL": "ABB"
+    },
+    {
+      "SECURITY_ID": "541153",
+      "SYMBOL": "BANDHANBNK"
+    },
+    {
+      "SECURITY_ID": "532636",
+      "SYMBOL": "IIFL"
+    },
+    {
+      "SECURITY_ID": "532321",
+      "SYMBOL": "ZYDUSLIFE"
+    },
+    {
+      "SECURITY_ID": "543526",
+      "SYMBOL": "LICI"
+    },
+    {
+      "SECURITY_ID": "524000",
+      "SYMBOL": "POONAWALLA"
+    },
+    {
+      "SECURITY_ID": "500530",
+      "SYMBOL": "BOSCHLTD"
+    },
+    {
+      "SECURITY_ID": "533179",
+      "SYMBOL": "PERSISTENT"
+    },
+    {
+      "SECURITY_ID": "508869",
+      "SYMBOL": "APOLLOHOSP"
+    },
+    {
+      "SECURITY_ID": "539523",
+      "SYMBOL": "ALKEM"
+    },
+    {
+      "SECURITY_ID": "543235",
+      "SYMBOL": "ANGELONE"
+    },
+    {
+      "SECURITY_ID": "532814",
+      "SYMBOL": "INDIANB"
+    },
+    {
+      "SECURITY_ID": "543396",
+      "SYMBOL": "PAYTM"
+    },
+    {
+      "SECURITY_ID": "532978",
+      "SYMBOL": "BAJAJFINSV"
+    },
+    {
+      "SECURITY_ID": "532296",
+      "SYMBOL": "GLENMARK"
+    },
+    {
+      "SECURITY_ID": "532538",
+      "SYMBOL": "ULTRACEMCO"
+    },
+    {
+      "SECURITY_ID": "500400",
+      "SYMBOL": "TATAPOWER"
+    },
+    {
+      "SECURITY_ID": "533273",
+      "SYMBOL": "OBEROIRLTY"
+    },
+    {
+      "SECURITY_ID": "532134",
+      "SYMBOL": "BANKBARODA"
+    },
+    {
+      "SECURITY_ID": "532754",
+      "SYMBOL": "GMRAIRPORT"
+    },
+    {
+      "SECURITY_ID": "532454",
+      "SYMBOL": "BHARTIARTL"
+    },
+    {
+      "SECURITY_ID": "544026",
+      "SYMBOL": "IREDA"
+    },
+    {
+      "SECURITY_ID": "532508",
+      "SYMBOL": "JSL"
+    },
+    {
+      "SECURITY_ID": "532947",
+      "SYMBOL": "IRB"
+    },
+    {
+      "SECURITY_ID": "500825",
+      "SYMBOL": "BRITANNIA"
+    },
+    {
+      "SECURITY_ID": "543300",
+      "SYMBOL": "SONACOMS"
+    },
+    {
+      "SECURITY_ID": "500470",
+      "SYMBOL": "TATASTEEL"
+    },
+    {
+      "SECURITY_ID": "533148",
+      "SYMBOL": "JSWENERGY"
+    },
+    {
+      "SECURITY_ID": "500770",
+      "SYMBOL": "TATACHEM"
+    },
+    {
+      "SECURITY_ID": "500182",
+      "SYMBOL": "HEROMOTOCO"
+    },
+    {
+      "SECURITY_ID": "532500",
+      "SYMBOL": "MARUTI"
+    },
+    {
+      "SECURITY_ID": "533155",
+      "SYMBOL": "JUBLFOOD"
+    },
+    {
+      "SECURITY_ID": "532755",
+      "SYMBOL": "TECHM"
+    },
+    {
+      "SECURITY_ID": "500114",
+      "SYMBOL": "TITAN"
+    },
+    {
+      "SECURITY_ID": "540750",
+      "SYMBOL": "IEX"
+    },
+    {
+      "SECURITY_ID": "503806",
+      "SYMBOL": "SRF"
+    },
+    {
+      "SECURITY_ID": "500096",
+      "SYMBOL": "DABUR"
+    },
+    {
+      "SECURITY_ID": "532343",
+      "SYMBOL": "TVSMOTOR"
+    },
+    {
+      "SECURITY_ID": "532174",
+      "SYMBOL": "ICICIBANK"
+    },
+    {
+      "SECURITY_ID": "500086",
+      "SYMBOL": "EXIDEIND"
+    },
+    {
+      "SECURITY_ID": "532725",
+      "SYMBOL": "SOLARINDS"
+    },
+    {
+      "SECURITY_ID": "532830",
+      "SYMBOL": "ASTRAL"
+    },
+    {
+      "SECURITY_ID": "500408",
+      "SYMBOL": "TATAELXSI"
+    },
+    {
+      "SECURITY_ID": "540065",
+      "SYMBOL": "RBLBANK"
+    },
+    {
+      "SECURITY_ID": "532477",
+      "SYMBOL": "UNIONBANK"
+    },
+    {
+      "SECURITY_ID": "500420",
+      "SYMBOL": "TORNTPHARM"
+    },
+    {
+      "SECURITY_ID": "541154",
+      "SYMBOL": "HAL"
+    },
+    {
+      "SECURITY_ID": "540777",
+      "SYMBOL": "HDFCLIFE"
+    },
+    {
+      "SECURITY_ID": "500547",
+      "SYMBOL": "BPCL"
+    },
+    {
+      "SECURITY_ID": "531344",
+      "SYMBOL": "CONCOR"
+    },
+    {
+      "SECURITY_ID": "542830",
+      "SYMBOL": "IRCTC"
+    },
+    {
+      "SECURITY_ID": "532281",
+      "SYMBOL": "HCLTECH"
+    },
+    {
+      "SECURITY_ID": "534091",
+      "SYMBOL": "MCX"
+    },
+    {
+      "SECURITY_ID": "500425",
+      "SYMBOL": "AMBUJACEM"
+    },
+    {
+      "SECURITY_ID": "500469",
+      "SYMBOL": "FEDERALBNK"
+    },
+    {
+      "SECURITY_ID": "531642",
+      "SYMBOL": "MARICO"
+    },
+    {
+      "SECURITY_ID": "524804",
+      "SYMBOL": "AUROPHARMA"
+    },
+    {
+      "SECURITY_ID": "540762",
+      "SYMBOL": "TIINDIA"
+    },
+    {
+      "SECURITY_ID": "533758",
+      "SYMBOL": "APLAPOLLO"
+    },
+    {
+      "SECURITY_ID": "500251",
+      "SYMBOL": "TRENT"
+    },
+    {
+      "SECURITY_ID": "540133",
+      "SYMBOL": "ICICIPRULI"
+    },
+    {
+      "SECURITY_ID": "500480",
+      "SYMBOL": "CUMMINSIND"
+    },
+    {
+      "SECURITY_ID": "539448",
+      "SYMBOL": "INDIGO"
+    },
+    {
+      "SECURITY_ID": "533150",
+      "SYMBOL": "GODREJPROP"
+    },
+    {
+      "SECURITY_ID": "500331",
+      "SYMBOL": "PIDILITIND"
+    },
+    {
+      "SECURITY_ID": "500830",
+      "SYMBOL": "COLPAL"
+    },
+    {
+      "SECURITY_ID": "540611",
+      "SYMBOL": "AUBANK"
+    },
+    {
+      "SECURITY_ID": "500790",
+      "SYMBOL": "NESTLEIND"
+    },
+    {
+      "SECURITY_ID": "511218",
+      "SYMBOL": "SHRIRAMFIN"
+    },
+    {
+      "SECURITY_ID": "500820",
+      "SYMBOL": "ASIANPAINT"
+    },
+    {
+      "SECURITY_ID": "500104",
+      "SYMBOL": "HINDPETRO"
+    },
+    {
+      "SECURITY_ID": "509930",
+      "SYMBOL": "SUPREMEIND"
+    },
+    {
+      "SECURITY_ID": "543384",
+      "SYMBOL": "NYKAA"
+    },
+    {
+      "SECURITY_ID": "532424",
+      "SYMBOL": "GODREJCP"
+    },
+    {
+      "SECURITY_ID": "500575",
+      "SYMBOL": "VOLTAS"
+    },
+    {
+      "SECURITY_ID": "500034",
+      "SYMBOL": "BAJFINANCE"
+    },
+    {
+      "SECURITY_ID": "533106",
+      "SYMBOL": "OIL"
+    },
+    {
+      "SECURITY_ID": "539268",
+      "SYMBOL": "SYNGENE"
+    },
+    {
+      "SECURITY_ID": "500253",
+      "SYMBOL": "LICHSGFIN"
+    },
+    {
+      "SECURITY_ID": "543066",
+      "SYMBOL": "SBICARD"
+    },
+    {
+      "SECURITY_ID": "532286",
+      "SYMBOL": "JINDALSTEL"
+    },
+    {
+      "SECURITY_ID": "543287",
+      "SYMBOL": "LODHA"
+    },
+    {
+      "SECURITY_ID": "540180",
+      "SYMBOL": "VBL"
+    },
+    {
+      "SECURITY_ID": "543529",
+      "SYMBOL": "DELHIVERY"
+    },
+    {
+      "SECURITY_ID": "532432",
+      "SYMBOL": "UNITDSPR"
+    },
+    {
+      "SECURITY_ID": "532187",
+      "SYMBOL": "INDUSINDBK"
+    },
+    {
+      "SECURITY_ID": "544028",
+      "SYMBOL": "TATATECH"
+    },
+    {
+      "SECURITY_ID": "532540",
+      "SYMBOL": "TCS"
+    },
+    {
+      "SECURITY_ID": "541729",
+      "SYMBOL": "HDFCAMC"
+    },
+    {
+      "SECURITY_ID": "532215",
+      "SYMBOL": "AXISBANK"
+    },
+    {
+      "SECURITY_ID": "500520",
+      "SYMBOL": "M&M"
+    },
+    {
+      "SECURITY_ID": "543320",
+      "SYMBOL": "ETERNAL"
+    },
+    {
+      "SECURITY_ID": "500247",
+      "SYMBOL": "KOTAKBANK"
+    },
+    {
+      "SECURITY_ID": "500850",
+      "SYMBOL": "INDHOTEL"
+    },
+    {
+      "SECURITY_ID": "500183",
+      "SYMBOL": "HFCL"
+    },
+    {
+      "SECURITY_ID": "532234",
+      "SYMBOL": "NATIONALUM"
+    },
+    {
+      "SECURITY_ID": "532955",
+      "SYMBOL": "RECLTD"
+    },
+    {
+      "SECURITY_ID": "534309",
+      "SYMBOL": "NBCC"
+    },
+    {
+      "SECURITY_ID": "532523",
+      "SYMBOL": "BIOCON"
+    },
+    {
+      "SECURITY_ID": "533519",
+      "SYMBOL": "LTF"
+    },
+    {
+      "SECURITY_ID": "530965",
+      "SYMBOL": "IOC"
+    },
+    {
+      "SECURITY_ID": "526299",
+      "SYMBOL": "MPHASIS"
+    },
+    {
+      "SECURITY_ID": "500087",
+      "SYMBOL": "CIPLA"
+    },
+    {
+      "SECURITY_ID": "531213",
+      "SYMBOL": "MANAPPURAM"
+    },
+    {
+      "SECURITY_ID": "500875",
+      "SYMBOL": "ITC"
+    },
+    {
+      "SECURITY_ID": "524715",
+      "SYMBOL": "SUNPHARMA"
+    },
+    {
+      "SECURITY_ID": "500550",
+      "SYMBOL": "SIEMENS"
+    },
+    {
+      "SECURITY_ID": "539437",
+      "SYMBOL": "IDFCFIRSTB"
+    },
+    {
+      "SECURITY_ID": "532898",
+      "SYMBOL": "POWERGRID"
+    },
+    {
+      "SECURITY_ID": "532149",
+      "SYMBOL": "BANKINDIA"
+    },
+    {
+      "SECURITY_ID": "500295",
+      "SYMBOL": "VEDL"
+    },
+    {
+      "SECURITY_ID": "540716",
+      "SYMBOL": "ICICIGI"
+    },
+    {
+      "SECURITY_ID": "500124",
+      "SYMBOL": "DRREDDY"
+    },
+    {
+      "SECURITY_ID": "511243",
+      "SYMBOL": "CHOLAFIN"
+    },
+    {
+      "SECURITY_ID": "500113",
+      "SYMBOL": "SAIL"
+    },
+    {
+      "SECURITY_ID": "500084",
+      "SYMBOL": "CESC"
+    },
+    {
+      "SECURITY_ID": "535755",
+      "SYMBOL": "ABFRL"
+    },
+    {
+      "SECURITY_ID": "541143",
+      "SYMBOL": "BDL"
+    },
+    {
+      "SECURITY_ID": "542649",
+      "SYMBOL": "RVNL"
+    },
+    {
+      "SECURITY_ID": "543237",
+      "SYMBOL": "MAZDOCK"
+    },
+    {
+      "SECURITY_ID": "543635",
+      "SYMBOL": "PPLPHARMA"
+    },
+    {
+      "SECURITY_ID": "532539",
+      "SYMBOL": "UNOMINDA"
+    },
+    {
+      "SECURITY_ID": "543664",
+      "SYMBOL": "KAYNES"
+    },
+    {
+      "SECURITY_ID": "500067",
+      "SYMBOL": "BLUESTARCO"
+    },
+    {
+      "SECURITY_ID": "532843",
+      "SYMBOL": "FORTIS"
+    },
+    {
+      "SECURITY_ID": "543904",
+      "SYMBOL": "MANKIND"
+    },
+    {
+      "SECURITY_ID": "543720",
+      "SYMBOL": "KFINTECH"
+    },
+    {
+      "SECURITY_ID": "540902",
+      "SYMBOL": "AMBER"
+    },
+    {
+      "SECURITY_ID": "533581",
+      "SYMBOL": "PGEL"
+    },
+    {
+      "SECURITY_ID": "542772",
+      "SYMBOL": "360ONE"
+    }
+  ],
+  "NSE": [
+    {
+      "SECURITY_ID": "6733",
+      "SYMBOL": "JINDALSTEL"
+    },
+    {
+      "SECURITY_ID": "1348",
+      "SYMBOL": "HEROMOTOCO"
+    },
+    {
+      "SECURITY_ID": "18143",
+      "SYMBOL": "JIOFIN"
+    },
+    {
+      "SECURITY_ID": "21951",
+      "SYMBOL": "HFCL"
+    },
+    {
+      "SECURITY_ID": "17869",
+      "SYMBOL": "JSWENERGY"
+    },
+    {
+      "SECURITY_ID": "1624",
+      "SYMBOL": "IOC"
+    },
+    {
+      "SECURITY_ID": "11723",
+      "SYMBOL": "JSWSTEEL"
+    },
+    {
+      "SECURITY_ID": "1363",
+      "SYMBOL": "HINDALCO"
+    },
+    {
+      "SECURITY_ID": "15313",
+      "SYMBOL": "IRB"
+    },
+    {
+      "SECURITY_ID": "1406",
+      "SYMBOL": "HINDPETRO"
+    },
+    {
+      "SECURITY_ID": "13611",
+      "SYMBOL": "IRCTC"
+    },
+    {
+      "SECURITY_ID": "18096",
+      "SYMBOL": "JUBLFOOD"
+    },
+    {
+      "SECURITY_ID": "1394",
+      "SYMBOL": "HINDUNILVR"
+    },
+    {
+      "SECURITY_ID": "20261",
+      "SYMBOL": "IREDA"
+    },
+    {
+      "SECURITY_ID": "2029",
+      "SYMBOL": "IRFC"
+    },
+    {
+      "SECURITY_ID": "2955",
+      "SYMBOL": "KALYANKJIL"
+    },
+    {
+      "SECURITY_ID": "1660",
+      "SYMBOL": "ITC"
+    },
+    {
+      "SECURITY_ID": "1424",
+      "SYMBOL": "HINDZINC"
+    },
+    {
+      "SECURITY_ID": "12092",
+      "SYMBOL": "KAYNES"
+    },
+    {
+      "SECURITY_ID": "20825",
+      "SYMBOL": "HUDCO"
+    },
+    {
+      "SECURITY_ID": "13310",
+      "SYMBOL": "KEI"
+    },
+    {
+      "SECURITY_ID": "4963",
+      "SYMBOL": "ICICIBANK"
+    },
+    {
+      "SECURITY_ID": "13359",
+      "SYMBOL": "KFINTECH"
+    },
+    {
+      "SECURITY_ID": "1922",
+      "SYMBOL": "KOTAKBANK"
+    },
+    {
+      "SECURITY_ID": "21770",
+      "SYMBOL": "ICICIGI"
+    },
+    {
+      "SECURITY_ID": "11236",
+      "SYMBOL": "JSL"
+    },
+    {
+      "SECURITY_ID": "9683",
+      "SYMBOL": "KPITTECH"
+    },
+    {
+      "SECURITY_ID": "18652",
+      "SYMBOL": "ICICIPRULI"
+    },
+    {
+      "SECURITY_ID": "19234",
+      "SYMBOL": "LAURUSLABS"
+    },
+    {
+      "SECURITY_ID": "14366",
+      "SYMBOL": "IDEA"
+    },
+    {
+      "SECURITY_ID": "11184",
+      "SYMBOL": "IDFCFIRSTB"
+    },
+    {
+      "SECURITY_ID": "1997",
+      "SYMBOL": "LICHSGFIN"
+    },
+    {
+      "SECURITY_ID": "220",
+      "SYMBOL": "IEX"
+    },
+    {
+      "SECURITY_ID": "9480",
+      "SYMBOL": "LICI"
+    },
+    {
+      "SECURITY_ID": "11262",
+      "SYMBOL": "IGL"
+    },
+    {
+      "SECURITY_ID": "11809",
+      "SYMBOL": "IIFL"
+    },
+    {
+      "SECURITY_ID": "3220",
+      "SYMBOL": "LODHA"
+    },
+    {
+      "SECURITY_ID": "1512",
+      "SYMBOL": "INDHOTEL"
+    },
+    {
+      "SECURITY_ID": "11483",
+      "SYMBOL": "LT"
+    },
+    {
+      "SECURITY_ID": "24948",
+      "SYMBOL": "LTF"
+    },
+    {
+      "SECURITY_ID": "11195",
+      "SYMBOL": "INDIGO"
+    },
+    {
+      "SECURITY_ID": "17818",
+      "SYMBOL": "LTIM"
+    },
+    {
+      "SECURITY_ID": "5258",
+      "SYMBOL": "INDUSINDBK"
+    },
+    {
+      "SECURITY_ID": "10440",
+      "SYMBOL": "LUPIN"
+    },
+    {
+      "SECURITY_ID": "29135",
+      "SYMBOL": "INDUSTOWER"
+    },
+    {
+      "SECURITY_ID": "1594",
+      "SYMBOL": "INFY"
+    },
+    {
+      "SECURITY_ID": "7852",
+      "SYMBOL": "INOXWIND"
+    },
+    {
+      "SECURITY_ID": "2031",
+      "SYMBOL": "M&M"
+    },
+    {
+      "SECURITY_ID": "19061",
+      "SYMBOL": "MANAPPURAM"
+    },
+    {
+      "SECURITY_ID": "15380",
+      "SYMBOL": "MANKIND"
+    },
+    {
+      "SECURITY_ID": "4067",
+      "SYMBOL": "MARICO"
+    },
+    {
+      "SECURITY_ID": "10999",
+      "SYMBOL": "MARUTI"
+    },
+    {
+      "SECURITY_ID": "22377",
+      "SYMBOL": "MAXHEALTH"
+    },
+    {
+      "SECURITY_ID": "509",
+      "SYMBOL": "MAZDOCK"
+    },
+    {
+      "SECURITY_ID": "31181",
+      "SYMBOL": "MCX"
+    },
+    {
+      "SECURITY_ID": "2142",
+      "SYMBOL": "MFSL"
+    },
+    {
+      "SECURITY_ID": "4204",
+      "SYMBOL": "MOTHERSON"
+    },
+    {
+      "SECURITY_ID": "4503",
+      "SYMBOL": "MPHASIS"
+    },
+    {
+      "SECURITY_ID": "23650",
+      "SYMBOL": "MUTHOOTFIN"
+    },
+    {
+      "SECURITY_ID": "6364",
+      "SYMBOL": "NATIONALUM"
+    },
+    {
+      "SECURITY_ID": "13751",
+      "SYMBOL": "NAUKRI"
+    },
+    {
+      "SECURITY_ID": "31415",
+      "SYMBOL": "NBCC"
+    },
+    {
+      "SECURITY_ID": "2319",
+      "SYMBOL": "NCC"
+    },
+    {
+      "SECURITY_ID": "17963",
+      "SYMBOL": "NESTLEIND"
+    },
+    {
+      "SECURITY_ID": "17400",
+      "SYMBOL": "NHPC"
+    },
+    {
+      "SECURITY_ID": "15332",
+      "SYMBOL": "NMDC"
+    },
+    {
+      "SECURITY_ID": "11630",
+      "SYMBOL": "NTPC"
+    },
+    {
+      "SECURITY_ID": "18721",
+      "SYMBOL": "NUVAMA"
+    },
+    {
+      "SECURITY_ID": "6545",
+      "SYMBOL": "NYKAA"
+    },
+    {
+      "SECURITY_ID": "20242",
+      "SYMBOL": "OBEROIRLTY"
+    },
+    {
+      "SECURITY_ID": "10738",
+      "SYMBOL": "OFSS"
+    },
+    {
+      "SECURITY_ID": "17438",
+      "SYMBOL": "OIL"
+    },
+    {
+      "SECURITY_ID": "2475",
+      "SYMBOL": "ONGC"
+    },
+    {
+      "SECURITY_ID": "14413",
+      "SYMBOL": "PAGEIND"
+    },
+    {
+      "SECURITY_ID": "17029",
+      "SYMBOL": "PATANJALI"
+    },
+    {
+      "SECURITY_ID": "6705",
+      "SYMBOL": "PAYTM"
+    },
+    {
+      "SECURITY_ID": "18365",
+      "SYMBOL": "PERSISTENT"
+    },
+    {
+      "SECURITY_ID": "11351",
+      "SYMBOL": "PETRONET"
+    },
+    {
+      "SECURITY_ID": "14299",
+      "SYMBOL": "PFC"
+    },
+    {
+      "SECURITY_ID": "25358",
+      "SYMBOL": "PGEL"
+    },
+    {
+      "SECURITY_ID": "14552",
+      "SYMBOL": "PHOENIXLTD"
+    },
+    {
+      "SECURITY_ID": "2664",
+      "SYMBOL": "PIDILITIND"
+    },
+    {
+      "SECURITY_ID": "24184",
+      "SYMBOL": "PIIND"
+    },
+    {
+      "SECURITY_ID": "10666",
+      "SYMBOL": "PNB"
+    },
+    {
+      "SECURITY_ID": "18908",
+      "SYMBOL": "PNBHOUSING"
+    },
+    {
+      "SECURITY_ID": "6656",
+      "SYMBOL": "POLICYBZR"
+    },
+    {
+      "SECURITY_ID": "9590",
+      "SYMBOL": "POLYCAB"
+    },
+    {
+      "SECURITY_ID": "14977",
+      "SYMBOL": "POWERGRID"
+    },
+    {
+      "SECURITY_ID": "11571",
+      "SYMBOL": "PPLPHARMA"
+    },
+    {
+      "SECURITY_ID": "20302",
+      "SYMBOL": "PRESTIGE"
+    },
+    {
+      "SECURITY_ID": "18391",
+      "SYMBOL": "RBLBANK"
+    },
+    {
+      "SECURITY_ID": "15355",
+      "SYMBOL": "RECLTD"
+    },
+    {
+      "SECURITY_ID": "2885",
+      "SYMBOL": "RELIANCE"
+    },
+    {
+      "SECURITY_ID": "9552",
+      "SYMBOL": "RVNL"
+    },
+    {
+      "SECURITY_ID": "2963",
+      "SYMBOL": "SAIL"
+    },
+    {
+      "SECURITY_ID": "17971",
+      "SYMBOL": "SBICARD"
+    },
+    {
+      "SECURITY_ID": "21808",
+      "SYMBOL": "SBILIFE"
+    },
+    {
+      "SECURITY_ID": "3045",
+      "SYMBOL": "SBIN"
+    },
+    {
+      "SECURITY_ID": "3103",
+      "SYMBOL": "SHREECEM"
+    },
+    {
+      "SECURITY_ID": "4306",
+      "SYMBOL": "SHRIRAMFIN"
+    },
+    {
+      "SECURITY_ID": "3150",
+      "SYMBOL": "SIEMENS"
+    },
+    {
+      "SECURITY_ID": "18883",
+      "SYMBOL": "SJVN"
+    },
+    {
+      "SECURITY_ID": "13332",
+      "SYMBOL": "SOLARINDS"
+    },
+    {
+      "SECURITY_ID": "4684",
+      "SYMBOL": "SONACOMS"
+    },
+    {
+      "SECURITY_ID": "3273",
+      "SYMBOL": "SRF"
+    },
+    {
+      "SECURITY_ID": "3351",
+      "SYMBOL": "SUNPHARMA"
+    },
+    {
+      "SECURITY_ID": "3363",
+      "SYMBOL": "SUPREMEIND"
+    },
+    {
+      "SECURITY_ID": "12018",
+      "SYMBOL": "SUZLON"
+    },
+    {
+      "SECURITY_ID": "10243",
+      "SYMBOL": "SYNGENE"
+    },
+    {
+      "SECURITY_ID": "3405",
+      "SYMBOL": "TATACHEM"
+    },
+    {
+      "SECURITY_ID": "3432",
+      "SYMBOL": "TATACONSUM"
+    },
+    {
+      "SECURITY_ID": "3411",
+      "SYMBOL": "TATAELXSI"
+    },
+    {
+      "SECURITY_ID": "11403",
+      "SYMBOL": "POONAWALLA"
+    },
+    {
+      "SECURITY_ID": "3456",
+      "SYMBOL": "TATAMOTORS"
+    },
+    {
+      "SECURITY_ID": "3426",
+      "SYMBOL": "TATAPOWER"
+    },
+    {
+      "SECURITY_ID": "3499",
+      "SYMBOL": "TATASTEEL"
+    },
+    {
+      "SECURITY_ID": "20293",
+      "SYMBOL": "TATATECH"
+    },
+    {
+      "SECURITY_ID": "11536",
+      "SYMBOL": "TCS"
+    },
+    {
+      "SECURITY_ID": "13538",
+      "SYMBOL": "TECHM"
+    },
+    {
+      "SECURITY_ID": "312",
+      "SYMBOL": "TIINDIA"
+    },
+    {
+      "SECURITY_ID": "15414",
+      "SYMBOL": "TITAGARH"
+    },
+    {
+      "SECURITY_ID": "3506",
+      "SYMBOL": "TITAN"
+    },
+    {
+      "SECURITY_ID": "3518",
+      "SYMBOL": "TORNTPHARM"
+    },
+    {
+      "SECURITY_ID": "13786",
+      "SYMBOL": "TORNTPOWER"
+    },
+    {
+      "SECURITY_ID": "1964",
+      "SYMBOL": "TRENT"
+    },
+    {
+      "SECURITY_ID": "8479",
+      "SYMBOL": "TVSMOTOR"
+    },
+    {
+      "SECURITY_ID": "11532",
+      "SYMBOL": "ULTRACEMCO"
+    },
+    {
+      "SECURITY_ID": "10753",
+      "SYMBOL": "UNIONBANK"
+    },
+    {
+      "SECURITY_ID": "10447",
+      "SYMBOL": "UNITDSPR"
+    },
+    {
+      "SECURITY_ID": "14154",
+      "SYMBOL": "UNOMINDA"
+    },
+    {
+      "SECURITY_ID": "11287",
+      "SYMBOL": "UPL"
+    },
+    {
+      "SECURITY_ID": "18921",
+      "SYMBOL": "VBL"
+    },
+    {
+      "SECURITY_ID": "3063",
+      "SYMBOL": "VEDL"
+    },
+    {
+      "SECURITY_ID": "3718",
+      "SYMBOL": "VOLTAS"
+    },
+    {
+      "SECURITY_ID": "3787",
+      "SYMBOL": "WIPRO"
+    },
+    {
+      "SECURITY_ID": "11915",
+      "SYMBOL": "YESBANK"
+    },
+    {
+      "SECURITY_ID": "7929",
+      "SYMBOL": "ZYDUSLIFE"
+    },
+    {
+      "SECURITY_ID": "13",
+      "SYMBOL": "ABB"
+    },
+    {
+      "SECURITY_ID": "25",
+      "SYMBOL": "ADANIENT"
+    },
+    {
+      "SECURITY_ID": "11703",
+      "SYMBOL": "ALKEM"
+    },
+    {
+      "SECURITY_ID": "3563",
+      "SYMBOL": "ADANIGREEN"
+    },
+    {
+      "SECURITY_ID": "21614",
+      "SYMBOL": "ABCAPITAL"
+    },
+    {
+      "SECURITY_ID": "1270",
+      "SYMBOL": "AMBUJACEM"
+    },
+    {
+      "SECURITY_ID": "212",
+      "SYMBOL": "ASHOKLEY"
+    },
+    {
+      "SECURITY_ID": "15083",
+      "SYMBOL": "ADANIPORTS"
+    },
+    {
+      "SECURITY_ID": "275",
+      "SYMBOL": "AUROPHARMA"
+    },
+    {
+      "SECURITY_ID": "324",
+      "SYMBOL": "ANGELONE"
+    },
+    {
+      "SECURITY_ID": "383",
+      "SYMBOL": "BEL"
+    },
+    {
+      "SECURITY_ID": "157",
+      "SYMBOL": "APOLLOHOSP"
+    },
+    {
+      "SECURITY_ID": "438",
+      "SYMBOL": "BHEL"
+    },
+    {
+      "SECURITY_ID": "236",
+      "SYMBOL": "ASIANPAINT"
+    },
+    {
+      "SECURITY_ID": "25780",
+      "SYMBOL": "APLAPOLLO"
+    },
+    {
+      "SECURITY_ID": "16675",
+      "SYMBOL": "BAJAJFINSV"
+    },
+    {
+      "SECURITY_ID": "547",
+      "SYMBOL": "BRITANNIA"
+    },
+    {
+      "SECURITY_ID": "2263",
+      "SYMBOL": "BANDHANBNK"
+    },
+    {
+      "SECURITY_ID": "4745",
+      "SYMBOL": "BANKINDIA"
+    },
+    {
+      "SECURITY_ID": "2144",
+      "SYMBOL": "BDL"
+    },
+    {
+      "SECURITY_ID": "14418",
+      "SYMBOL": "ASTRAL"
+    },
+    {
+      "SECURITY_ID": "19585",
+      "SYMBOL": "BSE"
+    },
+    {
+      "SECURITY_ID": "21238",
+      "SYMBOL": "AUBANK"
+    },
+    {
+      "SECURITY_ID": "5900",
+      "SYMBOL": "AXISBANK"
+    },
+    {
+      "SECURITY_ID": "422",
+      "SYMBOL": "BHARATFORG"
+    },
+    {
+      "SECURITY_ID": "10604",
+      "SYMBOL": "BHARTIARTL"
+    },
+    {
+      "SECURITY_ID": "11373",
+      "SYMBOL": "BIOCON"
+    },
+    {
+      "SECURITY_ID": "8311",
+      "SYMBOL": "BLUESTARCO"
+    },
+    {
+      "SECURITY_ID": "2181",
+      "SYMBOL": "BOSCHLTD"
+    },
+    {
+      "SECURITY_ID": "526",
+      "SYMBOL": "BPCL"
+    },
+    {
+      "SECURITY_ID": "30108",
+      "SYMBOL": "ABFRL"
+    },
+    {
+      "SECURITY_ID": "10794",
+      "SYMBOL": "CANBK"
+    },
+    {
+      "SECURITY_ID": "342",
+      "SYMBOL": "CAMS"
+    },
+    {
+      "SECURITY_ID": "628",
+      "SYMBOL": "CESC"
+    },
+    {
+      "SECURITY_ID": "694",
+      "SYMBOL": "CIPLA"
+    },
+    {
+      "SECURITY_ID": "21174",
+      "SYMBOL": "CDSL"
+    },
+    {
+      "SECURITY_ID": "760",
+      "SYMBOL": "CGPOWER"
+    },
+    {
+      "SECURITY_ID": "685",
+      "SYMBOL": "CHOLAFIN"
+    },
+    {
+      "SECURITY_ID": "20374",
+      "SYMBOL": "COALINDIA"
+    },
+    {
+      "SECURITY_ID": "1185",
+      "SYMBOL": "AMBER"
+    },
+    {
+      "SECURITY_ID": "11543",
+      "SYMBOL": "COFORGE"
+    },
+    {
+      "SECURITY_ID": "1023",
+      "SYMBOL": "FEDERALBNK"
+    },
+    {
+      "SECURITY_ID": "15141",
+      "SYMBOL": "COLPAL"
+    },
+    {
+      "SECURITY_ID": "14592",
+      "SYMBOL": "FORTIS"
+    },
+    {
+      "SECURITY_ID": "4749",
+      "SYMBOL": "CONCOR"
+    },
+    {
+      "SECURITY_ID": "1232",
+      "SYMBOL": "GRASIM"
+    },
+    {
+      "SECURITY_ID": "17094",
+      "SYMBOL": "CROMPTON"
+    },
+    {
+      "SECURITY_ID": "4244",
+      "SYMBOL": "HDFCAMC"
+    },
+    {
+      "SECURITY_ID": "1333",
+      "SYMBOL": "HDFCBANK"
+    },
+    {
+      "SECURITY_ID": "772",
+      "SYMBOL": "DABUR"
+    },
+    {
+      "SECURITY_ID": "8075",
+      "SYMBOL": "DALBHARAT"
+    },
+    {
+      "SECURITY_ID": "9599",
+      "SYMBOL": "DELHIVERY"
+    },
+    {
+      "SECURITY_ID": "10940",
+      "SYMBOL": "DIVISLAB"
+    },
+    {
+      "SECURITY_ID": "14732",
+      "SYMBOL": "DLF"
+    },
+    {
+      "SECURITY_ID": "881",
+      "SYMBOL": "DRREDDY"
+    },
+    {
+      "SECURITY_ID": "910",
+      "SYMBOL": "EICHERMOT"
+    },
+    {
+      "SECURITY_ID": "5097",
+      "SYMBOL": "ETERNAL"
+    },
+    {
+      "SECURITY_ID": "16669",
+      "SYMBOL": "BAJAJ-AUTO"
+    },
+    {
+      "SECURITY_ID": "4717",
+      "SYMBOL": "GAIL"
+    },
+    {
+      "SECURITY_ID": "14309",
+      "SYMBOL": "INDIANB"
+    },
+    {
+      "SECURITY_ID": "7406",
+      "SYMBOL": "GLENMARK"
+    },
+    {
+      "SECURITY_ID": "13528",
+      "SYMBOL": "GMRAIRPORT"
+    },
+    {
+      "SECURITY_ID": "10099",
+      "SYMBOL": "GODREJCP"
+    },
+    {
+      "SECURITY_ID": "17875",
+      "SYMBOL": "GODREJPROP"
+    },
+    {
+      "SECURITY_ID": "2303",
+      "SYMBOL": "HAL"
+    },
+    {
+      "SECURITY_ID": "13061",
+      "SYMBOL": "360ONE"
+    },
+    {
+      "SECURITY_ID": "9819",
+      "SYMBOL": "HAVELLS"
+    },
+    {
+      "SECURITY_ID": "7229",
+      "SYMBOL": "HCLTECH"
+    },
+    {
+      "SECURITY_ID": "467",
+      "SYMBOL": "HDFCLIFE"
+    },
+    {
+      "SECURITY_ID": "4668",
+      "SYMBOL": "BANKBARODA"
+    },
+    {
+      "SECURITY_ID": "1901",
+      "SYMBOL": "CUMMINSIND"
+    },
+    {
+      "SECURITY_ID": "5748",
+      "SYMBOL": "CYIENT"
+    },
+    {
+      "SECURITY_ID": "21690",
+      "SYMBOL": "DIXON"
+    },
+    {
+      "SECURITY_ID": "14747",
+      "SYMBOL": "011NSETEST"
+    },
+    {
+      "SECURITY_ID": "14751",
+      "SYMBOL": "021NSETEST"
+    },
+    {
+      "SECURITY_ID": "14753",
+      "SYMBOL": "031NSETEST"
+    },
+    {
+      "SECURITY_ID": "14755",
+      "SYMBOL": "041NSETEST"
+    },
+    {
+      "SECURITY_ID": "14758",
+      "SYMBOL": "051NSETEST"
+    },
+    {
+      "SECURITY_ID": "14762",
+      "SYMBOL": "061NSETEST"
+    },
+    {
+      "SECURITY_ID": "14764",
+      "SYMBOL": "071NSETEST"
+    },
+    {
+      "SECURITY_ID": "14767",
+      "SYMBOL": "081NSETEST"
+    },
+    {
+      "SECURITY_ID": "14769",
+      "SYMBOL": "091NSETEST"
+    },
+    {
+      "SECURITY_ID": "14772",
+      "SYMBOL": "101NSETEST"
+    },
+    {
+      "SECURITY_ID": "14774",
+      "SYMBOL": "111NSETEST"
+    },
+    {
+      "SECURITY_ID": "14777",
+      "SYMBOL": "121NSETEST"
+    },
+    {
+      "SECURITY_ID": "14778",
+      "SYMBOL": "131NSETEST"
+    },
+    {
+      "SECURITY_ID": "14781",
+      "SYMBOL": "141NSETEST"
+    },
+    {
+      "SECURITY_ID": "14782",
+      "SYMBOL": "151NSETEST"
+    },
+    {
+      "SECURITY_ID": "14784",
+      "SYMBOL": "161NSETEST"
+    },
+    {
+      "SECURITY_ID": "11872",
+      "SYMBOL": "GRANULES"
+    },
+    {
+      "SECURITY_ID": "676",
+      "SYMBOL": "EXIDEIND"
+    },
+    {
+      "SECURITY_ID": "6066",
+      "SYMBOL": "ATGL"
+    },
+    {
+      "SECURITY_ID": "19913",
+      "SYMBOL": "DMART"
+    },
+    {
+      "SECURITY_ID": "317",
+      "SYMBOL": "BAJFINANCE"
+    },
+    {
+      "SECURITY_ID": "10217",
+      "SYMBOL": "ADANIENSOL"
+    },
+    {
+      "SECURITY_ID": "23446",
+      "SYMBOL": "171NSETEST"
+    },
+    {
+      "SECURITY_ID": "23447",
+      "SYMBOL": "181NSETEST"
+    }
+  ]
+}
