@@ -1,6 +1,6 @@
 import httpx
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime, timedelta
 import json
 
@@ -150,6 +150,52 @@ class DhanService:
         except Exception as e:
             logger.error(f"❌ Error fetching option chain by symbol {symbol}: {e}")
             raise Exception(f"Failed to fetch option chain for {symbol}: {str(e)}")
+
+    def _calculate_strike_analytics(self, strikes: List) -> List:
+        """
+        Calculate additional analytics for strikes list
+
+        Calculates:
+        - strike_gap = underlyingValue - strikePrice
+        - strike_gap_percentage = (strike_gap / underlyingValue) * 100
+        - premium_percentage = (lastPrice / underlyingValue) * 100
+
+        Args:
+            strikes: List of Strike objects to enhance with analytics
+
+        Returns:
+            List of Strike objects with analytics fields populated
+        """
+        logger.info(f"🔢 Calculating strike analytics for {len(strikes)} strikes")
+
+        for strike in strikes:
+            try:
+                # Calculate strike gap (difference between underlying price and strike price)
+                strike.strikeGap = strike.underlyingValue - strike.strikePrice
+
+                # Calculate strike gap percentage
+                if strike.underlyingValue > 0:
+                    strike.strikeGapPercentage = (strike.strikeGap / strike.underlyingValue) * 100
+                else:
+                    strike.strikeGapPercentage = 0.0
+
+                # Calculate premium percentage (option price as percentage of underlying)
+                if strike.underlyingValue > 0:
+                    strike.premiumPercentage = (strike.lastPrice / strike.underlyingValue) * 100
+                else:
+                    strike.premiumPercentage = 0.0
+
+                logger.debug(f"📊 Strike {strike.strikePrice}: gap={strike.strikeGap:.2f}, gap%={strike.strikeGapPercentage:.2f}%, premium%={strike.premiumPercentage:.4f}%")
+
+            except Exception as e:
+                logger.warning(f"⚠️ Error calculating analytics for strike {strike.strikePrice}: {e}")
+                # Set default values if calculation fails
+                strike.strikeGap = 0.0
+                strike.strikeGapPercentage = 0.0
+                strike.premiumPercentage = 0.0
+
+        logger.info(f"✅ Completed strike analytics calculation for {len(strikes)} strikes")
+        return strikes
 
     def _get_next_thursday(self) -> datetime:
         """Get the next Thursday date for default expiry"""

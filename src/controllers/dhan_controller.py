@@ -32,7 +32,7 @@ def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Op
                 formatted_expiry = expiry_date
 
         # Log the actual response structure for debugging
-        logger.info(f"🔍 Dhan API response structure: {type(dhan_response)}")
+        logger.info(f"���� Dhan API response structure: {type(dhan_response)}")
         logger.info(f"🔍 Dhan API response keys: {list(dhan_response.keys()) if isinstance(dhan_response, dict) else 'Not a dict'}")
         logger.info(f"🔍 Using expiry date: {formatted_expiry}")
 
@@ -74,7 +74,11 @@ def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Op
                             askQty=int(ce_data.get('top_ask_quantity', 0)),
                             askPrice=float(ce_data.get('top_ask_price', 0)),
                             underlyingValue=underlying_value,
-                            type="CE"
+                            type="CE",
+                            # Initialize analytics fields - will be calculated later
+                            strikeGap=None,
+                            strikeGapPercentage=None,
+                            premiumPercentage=None
                         )
                         strikes.append(ce_strike)
 
@@ -101,7 +105,11 @@ def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Op
                             askQty=int(pe_data.get('top_ask_quantity', 0)),
                             askPrice=float(pe_data.get('top_ask_price', 0)),
                             underlyingValue=underlying_value,
-                            type="PE"
+                            type="PE",
+                            # Initialize analytics fields - will be calculated later
+                            strikeGap=None,
+                            strikeGapPercentage=None,
+                            premiumPercentage=None
                         )
                         strikes.append(pe_strike)
 
@@ -144,8 +152,11 @@ async def get_option_chain(
         # Convert to strikes with dynamic expiry
         strikes = _parse_dhan_response_to_strikes(option_chain, f"SCRIP_{underlying_scrip}", expiry)
 
-        logger.info(f"✅ Successfully fetched {len(strikes)} strikes from Dhan for scrip: {underlying_scrip}")
-        return strikes
+        # Calculate additional analytics for all strikes before returning
+        strikes_with_analytics = dhan_service._calculate_strike_analytics(strikes)
+
+        logger.info(f"✅ Successfully fetched {len(strikes_with_analytics)} strikes with analytics from Dhan for scrip: {underlying_scrip}")
+        return strikes_with_analytics
 
     except Exception as e:
         logger.error(f"❌ Error in Dhan option chain endpoint: {e}")
@@ -177,8 +188,11 @@ async def get_option_chain_by_symbol(
         # Convert to strikes with dynamic expiry
         strikes = _parse_dhan_response_to_strikes(option_chain, symbol, expiry)
 
-        logger.info(f"✅ Successfully fetched {len(strikes)} strikes from Dhan for symbol: {symbol}")
-        return strikes
+        # Calculate additional analytics for all strikes before returning
+        strikes_with_analytics = dhan_service._calculate_strike_analytics(strikes)
+
+        logger.info(f"✅ Successfully fetched {len(strikes_with_analytics)} strikes with analytics from Dhan for symbol: {symbol}")
+        return strikes_with_analytics
 
     except Exception as e:
         logger.error(f"❌ Error in Dhan option chain by symbol endpoint: {e}")
