@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from services.dhan_service import DhanService
 from models.option_models import Strike
+from services.cache_service import cache_service
 
 logger = logging.getLogger(__name__)
 
@@ -273,7 +274,7 @@ async def get_full_option_chain() -> Dict[str, Any]:
     try:
         logger.info("🎯 Full option chain request for all NSE symbols (2025-08-28) - CACHE ONLY")
 
-        from services.cache_service import cache_service
+
 
         # Fixed expiry date
         expiry_date = "2025-08-28"

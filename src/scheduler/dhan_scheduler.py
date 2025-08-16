@@ -130,7 +130,7 @@ class DhanScheduler:
             # Add the job to run every 15 minutes
             self.scheduler.add_job(
                 func=self.refresh_all_symbols_option_data,
-                trigger=IntervalTrigger(minutes=15),
+                trigger=IntervalTrigger(minutes=60),
                 id='refresh_option_data',
                 name='Refresh Option Chain Data',
                 replace_existing=True
