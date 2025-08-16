@@ -82,32 +82,6 @@ async def health_check():
         version="1.0.0"
     )
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize services and start scheduler on application startup"""
-    logger.info("🚀 Application startup - initializing services...")
-
-    try:
-        # Import and start the scheduler
-        from scheduler.dhan_scheduler import dhan_scheduler
-       # dhan_scheduler.start_scheduler()
-        logger.info("✅ Dhan scheduler started automatically")
-    except Exception as e:
-        logger.error(f"❌ Failed to start scheduler on startup: {e}")
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Clean shutdown of services"""
-    logger.info("🛑 Application shutdown - stopping services...")
-
-    try:
-        # Import and stop the scheduler
-        from scheduler.dhan_scheduler import dhan_scheduler
-       # dhan_scheduler.stop_scheduler()
-        logger.info("✅ Dhan scheduler stopped gracefully")
-    except Exception as e:
-        logger.error(f"❌ Error stopping scheduler on shutdown: {e}")
-
 def main():
     """Start the FastAPI server"""
     logger.info("🚀 Starting Option Screener API...")
