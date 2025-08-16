@@ -63,19 +63,31 @@ class AnalyticsService:
         """
         logger.info("🎯 All symbols volatile options analysis request received")
 
-        # Get all F&O stocks from cache
+        # Get all F&O stocks from cache - HARDCODED FOR TESTING
         try:
-            fno_stocks_data = await self.nse_service.list_fno_stocks()
+            # Hardcoded F&O stocks data for testing (4 companies)
+            fno_stocks_data = {
+                "data": [
+                    {"symbol": "RELIANCE", "companyName": "Reliance Industries Limited"},
+                    {"symbol": "TCS", "companyName": "Tata Consultancy Services Limited"},
+                    {"symbol": "HDFCBANK", "companyName": "HDFC Bank Limited"},
+                    {"symbol": "INFY", "companyName": "Infosys Limited"}
+                ],
+                "total": 4,
+                "message": "Hardcoded F&O stocks for testing"
+            }
+
+            # fno_stocks_data = await self.nse_service.list_fno_stocks()  # Commented out for testing
             fno_stocks = fno_stocks_data.get("data", [])
 
             if not fno_stocks:
-                raise ValueError("No F&O stocks found in cache")
+                raise ValueError("No F&O stocks found in hardcoded data")
 
-            logger.info(f"📊 Found {len(fno_stocks)} F&O stocks to analyze")
+            logger.info(f"📊 Found {len(fno_stocks)} hardcoded F&O stocks to analyze (TEST MODE)")
 
         except Exception as e:
-            logger.error(f"❌ Failed to fetch F&O stocks: {str(e)}")
-            raise ValueError(f"Failed to fetch F&O stocks list: {str(e)}")
+            logger.error(f"❌ Failed to use hardcoded F&O stocks: {str(e)}")
+            raise ValueError(f"Failed to use hardcoded F&O stocks list: {str(e)}")
 
         # Collect all strikes from all symbols
         all_strikes = []
@@ -105,16 +117,32 @@ class AnalyticsService:
 
                 # Get volatile options for this symbol
                 strikes = await self.get_volatile_options(symbol)
+
+                # Group strikes by expiry date and cache them
+                strikes_by_expiry = {}
+                for strike in strikes:
+                    expiry_date = strike.expiryDate
+                    if expiry_date not in strikes_by_expiry:
+                        strikes_by_expiry[expiry_date] = []
+                    strikes_by_expiry[expiry_date].append(strike)
+
+                # Cache each expiry group separately with symbol_expiryDate as key
+                from services.cache_service import cache_service
+                for expiry_date, expiry_strikes in strikes_by_expiry.items():
+                    cache_key = f"{symbol}_{expiry_date}"
+                    cache_service.set(cache_key, expiry_strikes, ttl_minutes=60)
+                    logger.info(f"📦 Cached {len(expiry_strikes)} strikes for {cache_key}")
+
                 all_strikes.extend(strikes)
                 successful_symbols.append(symbol)
 
-                logger.info(f"✅ Successfully processed {symbol}: {len(strikes)} strikes")
+                logger.info(f"✅ Successfully processed {symbol}: {len(strikes)} strikes across {len(strikes_by_expiry)} expiry dates")
 
-                # Add 2-second delay only if we made an actual API call (cache miss)
+                # Add 3-second delay only if we made an actual API call (cache miss)
                 # and it's not the last symbol
                 if not is_cached and i < len(fno_stocks) - 1:
-                    logger.info(f"⏱️ Adding 2-second delay after API call for {symbol}")
-                    await asyncio.sleep(2)
+                    logger.info(f"⏱️ Adding 3-second delay after API call for {symbol}")
+                    await asyncio.sleep(3)
 
             except Exception as e:
                 logger.error(f"❌ Failed to process {symbol}: {str(e)}")

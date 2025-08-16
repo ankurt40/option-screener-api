@@ -3,6 +3,8 @@ import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timedelta
 import json
+import os
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +22,11 @@ class DhanService:
     def load_fno_symbols(self):
         """Load FNO symbols from the JSON file"""
         try:
-            with open('/Users/ankurtiwari/IdeaProjects/option-screener-api/src/data/fno-symbols-dhan.json', 'r') as f:
+            # Use relative path that works in both local and container environments
+            current_dir = Path(__file__).parent.parent
+            json_file_path = current_dir / "data" / "fno-symbols-dhan.json"
+
+            with open(json_file_path, 'r') as f:
                 self.fno_symbols = json.load(f)
             logger.info("✅ FNO symbols loaded successfully")
         except Exception as e:

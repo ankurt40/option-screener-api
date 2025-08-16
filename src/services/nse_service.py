@@ -5,63 +5,37 @@ import logging
 from datetime import datetime, timedelta
 from nse import NSE
 
+from services.cache_service import cache_service
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class NSEService:
-    """Service class to handle NSE API interactions with caching"""
+    """Service class to handle NSE API interactions with global caching"""
 
     def __init__(self):
         self.session: Optional[httpx.AsyncClient] = None
         self.cookies: Dict[str, str] = {}
         self.base_url = "https://www.nseindia.com"
-        # Cache storage: symbol -> {"data": data, "timestamp": datetime}
-        self._cache: Dict[str, Dict[str, Any]] = {}
-        self._cache_duration = timedelta(minutes=60)  # 1 hour cache
         # Initialize NSE client with download folder
         self.nse_client = NSE(download_folder='/tmp')
 
     def _is_cache_valid(self, symbol: str) -> bool:
         """Check if cached data for symbol is still valid"""
-        if symbol not in self._cache:
-            return False
-
-        cache_entry = self._cache[symbol]
-        cache_time = cache_entry.get("timestamp")
-
-        if not cache_time:
-            return False
-
-        return datetime.now() - cache_time < self._cache_duration
+        return cache_service.exists(symbol)
 
     def _get_cached_data(self, symbol: str) -> Optional[Dict[str, Any]]:
         """Get cached data for symbol if valid"""
-        if self._is_cache_valid(symbol):
+        cached_data = cache_service.get(symbol)
+        if cached_data:
             logger.info(f"🎯 Using cached data for {symbol}")
-            return self._cache[symbol]["data"]
-        return None
+        return cached_data
 
     def _store_in_cache(self, symbol: str, data: Dict[str, Any]) -> None:
         """Store data in cache with current timestamp"""
-        self._cache[symbol] = {
-            "data": data,
-            "timestamp": datetime.now()
-        }
+        cache_service.set(symbol, data, ttl_minutes=60)
         logger.info(f"💾 Cached data for {symbol} (expires in 60 minutes)")
-
-    def _clear_expired_cache(self) -> None:
-        """Clear expired cache entries to prevent memory buildup"""
-        now = datetime.now()
-        expired_symbols = []
-
-        for symbol, cache_entry in self._cache.items():
-            if now - cache_entry["timestamp"] >= self._cache_duration:
-                expired_symbols.append(symbol)
-
-        for symbol in expired_symbols:
-            del self._cache[symbol]
-            logger.info(f"🗑️ Cleared expired cache for {symbol}")
 
     async def get_session(self) -> httpx.AsyncClient:
         """Initialize session with NSE website to get cookies"""
@@ -97,9 +71,6 @@ class NSEService:
         """Fetch option chain data from NSE using nse library with caching"""
         logger.info(f"🔄 Fetching option chain for symbol: {symbol}")
 
-        # Clean up expired cache entries periodically
-        self._clear_expired_cache()
-
         # Check cache first
         cached_data = self._get_cached_data(symbol)
         if cached_data:
@@ -110,6 +81,9 @@ class NSEService:
         try:
             # Use the correct method name from NSE library
             option_chain_data = self.nse_client.optionChain(symbol.upper())
+
+            # Add delay to prevent rate limiting
+            await asyncio.sleep(2)
 
             if option_chain_data:
                 logger.info(f"✅ Successfully fetched option chain for {symbol} using nse library")

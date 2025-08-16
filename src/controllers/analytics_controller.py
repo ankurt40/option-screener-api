@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Query
 import logging
 from datetime import datetime
+from typing import List
 
-from models.option_models import VolatileOptionsResponse, APIResponse
+from models.option_models import VolatileOptionsResponse, APIResponse, Strike
 from services.analytics_service import analytics_service
 
 # Set up logging
@@ -15,7 +16,7 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/top-volatile-options", response_model=VolatileOptionsResponse)
+@router.get("/top-volatile-options", response_model=List[Strike])
 async def get_top_volatile_options(
     symbol: str = Query("RELIANCE", description="Stock symbol for volatile options analysis")
 ):
@@ -46,12 +47,7 @@ async def get_top_volatile_options(
         # Calculate additional analytics for the strikes
         strikes_with_analytics = analytics_service._calculate_strike_analytics(strikes)
 
-        return VolatileOptionsResponse(
-            success=True,
-            message=f"Top volatile options with analytics retrieved successfully for {symbol}",
-            data=strikes_with_analytics,
-            timestamp=datetime.now()
-        )
+        return strikes_with_analytics
 
     except HTTPException:
         raise
