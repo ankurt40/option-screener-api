@@ -18,8 +18,23 @@ class NSEService:
         self.session: Optional[httpx.AsyncClient] = None
         self.cookies: Dict[str, str] = {}
         self.base_url = "https://www.nseindia.com"
-        # Initialize NSE client with download folder
-        self.nse_client = NSE(download_folder='/tmp')
+        # Initialize NSE client lazily to avoid startup timeouts
+        self.nse_client = None
+        self._client_initialized = False
+
+    def _initialize_nse_client(self):
+        """Initialize NSE client lazily when first needed"""
+        if not self._client_initialized:
+            try:
+                logger.info("🔄 Initializing NSE client...")
+                self.nse_client = NSE(download_folder='/tmp')
+                self._client_initialized = True
+                logger.info("✅ NSE client initialized successfully")
+            except Exception as e:
+                logger.error(f"❌ Failed to initialize NSE client: {e}")
+                # Set a flag to prevent repeated attempts
+                self._client_initialized = True
+                self.nse_client = None
 
     def _is_cache_valid(self, symbol: str) -> bool:
         """Check if cached data for symbol is still valid"""
@@ -79,6 +94,14 @@ class NSEService:
         logger.info(f"📡 Cache miss for {symbol}, fetching from NSE using nse library...")
 
         try:
+            # Initialize NSE client if not done already
+            if not self._client_initialized:
+                self._initialize_nse_client()
+
+            # If NSE client failed to initialize, raise an error
+            if self.nse_client is None:
+                raise Exception("NSE client is not available")
+
             # Use the correct method name from NSE library
             option_chain_data = self.nse_client.optionChain(symbol.upper())
 
@@ -110,6 +133,14 @@ class NSEService:
         logger.info("📡 Cache miss for F&O stocks, fetching from NSE using nse library...")
 
         try:
+            # Initialize NSE client if not done already
+            if not self._client_initialized:
+                self._initialize_nse_client()
+
+            # If NSE client failed to initialize, raise an error
+            if self.nse_client is None:
+                raise Exception("NSE client is not available")
+
             # Use the correct method to fetch F&O stocks
             # The listFnoStocks() method is deprecated, use listEquityStocksByIndex instead
             fno_data = self.nse_client.listEquityStocksByIndex(index='SECURITIES IN F&O')

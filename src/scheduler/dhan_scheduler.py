@@ -180,7 +180,7 @@ class DhanScheduler:
                 "is_running": self.is_running,
                 "job_count": len(jobs),
                 "next_run_time": next_run,
-                "interval_minutes": 15,
+                "interval_minutes": 1440,
                 "exchange": self.exchange,
                 "expiry": self.expiry,
                 "scheduler_state": "running" if self.is_running else "stopped"
