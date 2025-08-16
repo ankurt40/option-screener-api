@@ -1,6 +1,8 @@
+import datetime
 from fastapi import APIRouter, HTTPException, Query
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 import logging
+from datetime import datetime
 from services.dhan_service import DhanService
 from models.option_models import Strike
 
@@ -182,7 +184,7 @@ async def get_option_chain_by_symbol(
             expiry=expiry
         )
 
-        logger.info(f"✅ Successfully fetched {len(strikes_with_analytics)} strikes with analytics from Dhan for symbol: {symbol}")
+       # logger.info(f"✅ Successfully fetched {len(strikes_with_analytics)} strikes with analytics from Dhan for symbol: {symbol}")
         return strikes_with_analytics
 
     except Exception as e:
@@ -258,4 +260,72 @@ async def clear_cache():
         return {"message": "Cache cleared successfully"}
     except Exception as e:
         logger.error(f"❌ Error clearing cache: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/get_full_option_chain")
+async def get_full_option_chain() -> Dict[str, Any]:
+    """
+    Get full option chain data for all NSE symbols for 2025-08-28 from cache only
+
+    Returns:
+        Dictionary containing option chain data for all cached symbols
+    """
+    try:
+        logger.info("🎯 Full option chain request for all NSE symbols (2025-08-28) - CACHE ONLY")
+
+        from services.cache_service import cache_service
+
+        # Fixed expiry date
+        expiry_date = "2025-08-28"
+
+        # Get all FNO symbols for NSE
+        nse_symbols = []
+        if hasattr(dhan_service, 'fno_symbols') and 'NSE' in dhan_service.fno_symbols:
+            nse_symbols = [stock['SYMBOL'] for stock in dhan_service.fno_symbols['NSE']]
+
+        logger.info(f"📊 Found {len(nse_symbols)} NSE symbols to check in cache")
+
+        # Collect cached data for all symbols
+        cached_data = {}
+        cache_hits = 0
+        cache_misses = 0
+
+        for symbol in nse_symbols:
+            cache_key = f"{symbol.upper()}_{expiry_date}"
+            cached_strikes = cache_service.get(cache_key)
+
+            if cached_strikes:
+                cache_hits += 1
+                cached_data[symbol] = {
+                    "symbol": symbol,
+                    "expiry_date": expiry_date,
+                    "strikes": cached_strikes,
+                    "strike_count": len(cached_strikes)
+                }
+                logger.debug(f"📦 Cache hit for {symbol}: {len(cached_strikes)} strikes")
+            else:
+                cache_misses += 1
+                logger.debug(f"📭 Cache miss for {symbol}")
+
+        # Prepare response
+        response_data = {
+            "success": True,
+            "message": f"Full option chain data retrieved from cache for {cache_hits} symbols",
+            "expiry_date": expiry_date,
+            "total_symbols_checked": len(nse_symbols),
+            "cache_hits": cache_hits,
+            "cache_misses": cache_misses,
+            "symbols_with_data": list(cached_data.keys()),
+            "data": cached_data,
+            "cache_hit_rate": round((cache_hits / len(nse_symbols) * 100), 2) if nse_symbols else 0,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        logger.info(f"✅ Full option chain request completed: {cache_hits}/{len(nse_symbols)} symbols found in cache")
+        logger.info(f"📈 Cache hit rate: {response_data['cache_hit_rate']}%")
+
+        return response_data
+
+    except Exception as e:
+        logger.error(f"❌ Error in get_full_option_chain endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))

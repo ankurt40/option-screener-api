@@ -55,7 +55,7 @@ class NSEService:
 
             # Get initial cookies by visiting NSE homepage
             try:
-                logger.info("🔄 Establishing session with NSE...")
+                ##  logger.info("🔄 Establishing session with NSE...")
                 response = await self.session.get(self.base_url)
                 if response.status_code == 200:
                     self.cookies.update(dict(response.cookies))

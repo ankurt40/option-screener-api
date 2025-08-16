@@ -103,14 +103,14 @@ class DhanService:
                 )
 
                 # Log the response details
-                logger.info(f"📥 Response status: {response.status_code}")
-                logger.info(f"📥 Response headers: {dict(response.headers)}")
+                # logger.info(f"📥 Response status: {response.status_code}")
+                # logger.info(f"📥 Response headers: {dict(response.headers)}")
 
                 if response.status_code == 200:
                     data = response.json()
-                    logger.info(f"📥 Response data keys: {list(data.keys()) if isinstance(data, dict) else 'Not a dict'}")
+                    #  logger.info(f"📥 Response data keys: {list(data.keys()) if isinstance(data, dict) else 'Not a dict'}")
 
-                    logger.info(f"✅ Successfully fetched option chain for scrip: {underlying_scrip}")
+                    # logger.info(f"✅ Successfully fetched option chain for scrip: {underlying_scrip}")
                     return data
                 else:
                     error_msg = f"Dhan API error {response.status_code}: {response.text}"
@@ -161,7 +161,7 @@ class DhanService:
         Returns:
             List of Strike objects with analytics fields populated
         """
-        logger.info(f"🔢 Calculating strike analytics for {len(strikes)} strikes")
+       # logger.info(f"🔢 Calculating strike analytics for {len(strikes)} strikes")
 
         for strike in strikes:
             try:
@@ -189,7 +189,7 @@ class DhanService:
                 strike.strikeGapPercentage = 0.0
                 strike.premiumPercentage = 0.0
 
-        logger.info(f"✅ Completed strike analytics calculation for {len(strikes)} strikes")
+       # logger.info(f"✅ Completed strike analytics calculation for {len(strikes)} strikes")
         return strikes
 
     def _get_next_thursday(self) -> datetime:

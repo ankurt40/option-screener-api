@@ -71,7 +71,7 @@ def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Opt
                 logger.warning(f"⚠️ Skipping invalid strike price: {strike_price_str} - {ve}")
                 continue
 
-        logger.info(f"📊 Parsed {len(strikes)} strikes from Dhan response for {symbol}")
+        ## logger.info(f"📊 Parsed {len(strikes)} strikes from Dhan response for {symbol}")
         return strikes
 
     except Exception as e:
@@ -110,7 +110,7 @@ def _extract_underlying_value(dhan_response: dict) -> float:
     underlying_value = 0.0
     if 'data' in dhan_response and 'last_price' in dhan_response['data']:
         underlying_value = float(dhan_response['data']['last_price'])
-        logger.info(f"🔍 Found underlying value: {underlying_value}")
+        ##logger.info(f"🔍 Found underlying value: {underlying_value}")
     return underlying_value
 
 def _extract_option_chain(dhan_response: dict) -> Optional[Dict[str, Any]]:

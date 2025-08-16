@@ -24,6 +24,7 @@ from controllers.analytics_controller import router as analytics_router
 from controllers.list_stocks_controller import router as list_stocks_router
 from controllers.cache_controller import router as cache_router
 from controllers.dhan_controller import router as dhan_router
+from controllers.scheduler_controller import router as scheduler_router
 from models.option_models import HealthResponse
 
 # Configure logging
@@ -59,6 +60,7 @@ app.include_router(analytics_router)
 app.include_router(list_stocks_router)
 app.include_router(cache_router)
 app.include_router(dhan_router)
+app.include_router(scheduler_router)
 
 @app.get("/", response_model=HealthResponse)
 async def root():
@@ -79,6 +81,32 @@ async def health_check():
         service="Option Screener API",
         version="1.0.0"
     )
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services and start scheduler on application startup"""
+    logger.info("🚀 Application startup - initializing services...")
+
+    try:
+        # Import and start the scheduler
+        from scheduler.dhan_scheduler import dhan_scheduler
+        dhan_scheduler.start_scheduler()
+        logger.info("✅ Dhan scheduler started automatically")
+    except Exception as e:
+        logger.error(f"❌ Failed to start scheduler on startup: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Clean shutdown of services"""
+    logger.info("🛑 Application shutdown - stopping services...")
+
+    try:
+        # Import and stop the scheduler
+        from scheduler.dhan_scheduler import dhan_scheduler
+        dhan_scheduler.stop_scheduler()
+        logger.info("✅ Dhan scheduler stopped gracefully")
+    except Exception as e:
+        logger.error(f"❌ Error stopping scheduler on shutdown: {e}")
 
 def main():
     """Start the FastAPI server"""
