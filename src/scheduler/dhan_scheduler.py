@@ -7,10 +7,16 @@ This ensures that cached option data is regularly updated.
 
 import asyncio
 import logging
+import sys
 from datetime import datetime
 from typing import List
+from pathlib import Path
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+
+# Add src directory to Python path for imports
+src_path = Path(__file__).parent.parent
+sys.path.insert(0, str(src_path))
 
 from services.dhan_service import DhanService
 

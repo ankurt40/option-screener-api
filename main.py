@@ -90,7 +90,7 @@ async def startup_event():
     try:
         # Import and start the scheduler
         from scheduler.dhan_scheduler import dhan_scheduler
-        dhan_scheduler.start_scheduler()
+       # dhan_scheduler.start_scheduler()
         logger.info("✅ Dhan scheduler started automatically")
     except Exception as e:
         logger.error(f"❌ Failed to start scheduler on startup: {e}")
@@ -103,7 +103,7 @@ async def shutdown_event():
     try:
         # Import and stop the scheduler
         from scheduler.dhan_scheduler import dhan_scheduler
-        dhan_scheduler.stop_scheduler()
+       # dhan_scheduler.stop_scheduler()
         logger.info("✅ Dhan scheduler stopped gracefully")
     except Exception as e:
         logger.error(f"❌ Error stopping scheduler on shutdown: {e}")

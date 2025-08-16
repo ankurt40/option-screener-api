@@ -8,6 +8,12 @@ from fastapi import APIRouter, HTTPException
 import logging
 from datetime import datetime
 from typing import Dict, Any
+import sys
+from pathlib import Path
+
+# Add src directory to Python path for imports
+src_path = Path(__file__).parent.parent
+sys.path.insert(0, str(src_path))
 
 from scheduler.dhan_scheduler import dhan_scheduler
 
@@ -31,7 +37,7 @@ async def start_scheduler() -> Dict[str, Any]:
         return {
             "success": True,
             "message": "Dhan scheduler started successfully",
-            "interval_minutes": 15,
+            "interval_minutes": 55,
             "exchange": "NSE",
             "expiry": "2025-08-28",
             "timestamp": datetime.now().isoformat()
