@@ -1,10 +1,14 @@
+import asyncio
+
 import httpx
 import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timedelta
 import json
-import os
 from pathlib import Path
+from services.cache_service import cache_service
+from models.option_models import Strike
+from utils.dhan_util import parse_dhan_response_to_strikes
 
 logger = logging.getLogger(__name__)
 
@@ -75,12 +79,6 @@ class DhanService:
             if not expiry:
                 expiry = self._get_next_thursday().strftime("%Y-%m-%d")
 
-            # Check cache first
-            cache_key = self._get_cache_key(underlying_scrip, underlying_seg, expiry)
-            if cache_key in self.cache and self._is_cache_valid(self.cache[cache_key]):
-                logger.info(f"📦 Cache hit for Dhan option chain: {underlying_scrip}")
-                return self.cache[cache_key]['data']
-
             logger.info(f"🔄 Fetching option chain from Dhan API for scrip: {underlying_scrip}")
 
             headers = {
@@ -95,10 +93,7 @@ class DhanService:
                 "Expiry": expiry
             }
 
-            # Log the request details
-            logger.info(f"📤 Making POST request to: {self.base_url}/optionchain")
-            logger.info(f"📤 Request headers: {dict(headers)}")
-            logger.info(f"📤 Request payload: {payload}")
+            await asyncio.sleep(2)
 
             async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
                 response = await client.post(
@@ -114,12 +109,6 @@ class DhanService:
                 if response.status_code == 200:
                     data = response.json()
                     logger.info(f"📥 Response data keys: {list(data.keys()) if isinstance(data, dict) else 'Not a dict'}")
-
-                    # Cache the response
-                    self.cache[cache_key] = {
-                        'data': data,
-                        'timestamp': datetime.now().isoformat()
-                    }
 
                     logger.info(f"✅ Successfully fetched option chain for scrip: {underlying_scrip}")
                     return data
@@ -226,3 +215,57 @@ class DhanService:
                 'size': len(str(entry['data']))
             }
         return cache_info
+
+    async def get_option_chain_with_analytics_by_symbol(
+        self,
+        symbol: str,
+        exchange: str = "NSE",
+        expiry: Optional[str] = None
+    ) -> List:
+        """
+        Get option chain data with analytics and caching by symbol name
+
+        Args:
+            symbol: Symbol name (e.g., RELIANCE)
+            exchange: Exchange (NSE or BSE)
+            expiry: Expiry date in YYYY-MM-DD format (optional)
+
+        Returns:
+            List of Strike objects with analytics
+        """
+
+
+        try:
+            # Check cache first before making API call
+            expiry_date = expiry if expiry else "2025-08-28"  # Use provided expiry or default
+            cache_key = f"{symbol.upper()}_{expiry_date}"
+
+            cached_strikes = cache_service.get(cache_key)
+            if cached_strikes:
+                logger.info(f"📦 Cache hit for Dhan strikes with analytics: {cache_key}")
+                return cached_strikes
+
+            logger.info(f"📡 Cache miss for Dhan strikes: {cache_key}, fetching from API")
+
+            # Get option chain data from Dhan API
+            option_chain = await self.get_option_chain_by_symbol(
+                symbol=symbol,
+                exchange=exchange,
+                expiry=expiry
+            )
+
+            # Convert to strikes using modular utility function
+            strikes = parse_dhan_response_to_strikes(option_chain, symbol, expiry)
+
+            # Calculate additional analytics for all strikes before returning
+            strikes_with_analytics = self._calculate_strike_analytics(strikes)
+
+            # Store strikes_with_analytics in global cache with symbol_expiry as key
+            cache_service.set(cache_key, strikes_with_analytics, ttl_minutes=60)
+            logger.info(f"📦 Cached {len(strikes_with_analytics)} strikes with analytics for Dhan {cache_key}")
+
+            return strikes_with_analytics
+
+        except Exception as e:
+            logger.error(f"❌ Error in get_option_chain_with_analytics_by_symbol: {e}")
+            raise
