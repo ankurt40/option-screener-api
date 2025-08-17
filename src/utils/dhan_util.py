@@ -147,6 +147,9 @@ def _create_call_strike(
     Returns:
         Strike object for Call option
     """
+    # Extract Greeks from ce_data
+    greeks = ce_data.get('greeks', {})
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -168,6 +171,11 @@ def _create_call_strike(
         askPrice=float(ce_data.get('top_ask_price', 0)),
         underlyingValue=underlying_value,
         type="CE",
+        # Greeks
+        delta=float(greeks.get('delta', 0)) if greeks.get('delta') is not None else None,
+        theta=float(greeks.get('theta', 0)) if greeks.get('theta') is not None else None,
+        gamma=float(greeks.get('gamma', 0)) if greeks.get('gamma') is not None else None,
+        vega=float(greeks.get('vega', 0)) if greeks.get('vega') is not None else None,
         strikeGap=None,
         strikeGapPercentage=None,
         premiumPercentage=None
@@ -193,6 +201,9 @@ def _create_put_strike(
     Returns:
         Strike object for Put option
     """
+    # Extract Greeks from pe_data
+    greeks = pe_data.get('greeks', {})
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -214,6 +225,11 @@ def _create_put_strike(
         askPrice=float(pe_data.get('top_ask_price', 0)),
         underlyingValue=underlying_value,
         type="PE",
+        # Greeks
+        delta=float(greeks.get('delta', 0)) if greeks.get('delta') is not None else None,
+        theta=float(greeks.get('theta', 0)) if greeks.get('theta') is not None else None,
+        gamma=float(greeks.get('gamma', 0)) if greeks.get('gamma') is not None else None,
+        vega=float(greeks.get('vega', 0)) if greeks.get('vega') is not None else None,
         strikeGap=None,
         strikeGapPercentage=None,
         premiumPercentage=None

@@ -70,6 +70,11 @@ class Strike(BaseModel):
     askPrice: float
     underlyingValue: float
     type: str  # "PE" or "CE"
+    # Greeks
+    delta: Optional[float] = None
+    theta: Optional[float] = None
+    gamma: Optional[float] = None
+    vega: Optional[float] = None
     # Analytics fields
     strikeGap: Optional[float] = None
     strikeGapPercentage: Optional[float] = None

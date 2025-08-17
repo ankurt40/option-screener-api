@@ -55,37 +55,58 @@ async def fno_lots(symbol: str = Query(..., description=SYMBOL_DESC)):
     Get FNO lot size information for a given symbol
     """
     try:
-        logger.info(f"Fetching FNO lots for symbol: {symbol}")
+        logger.info(f"Fetching FNO lot size for symbol: {symbol}")
 
-        # For FNO lots, we'll extract from option chain data or use a fallback
         from services.nse_service import nse_service
-        option_data = await nse_service.fetch_option_chain(symbol)
 
-        if not option_data:
-            raise HTTPException(status_code=404, detail=f"No data found for symbol: {symbol}")
+        # Get lot size for the specific symbol
+        lot_size = await nse_service.get_fno_lot_size(symbol)
 
-        # Extract lot size information if available in the option chain data
-        lot_size = 1
-        if "records" in option_data and "lotSize" in option_data["records"]:
-            lot_size = option_data["records"]["lotSize"]
-        elif "records" in option_data and "data" in option_data["records"] and option_data["records"]["data"]:
-            # Try to get lot size from first option data
-            first_option = option_data["records"]["data"][0]
-            if "CE" in first_option and "marketLot" in first_option["CE"]:
-                lot_size = first_option["CE"]["marketLot"]
+        if lot_size is None:
+            raise HTTPException(status_code=404, detail=f"No FNO lot data found for symbol: {symbol}")
 
         return {
-            "symbol": symbol,
+            "symbol": symbol.upper(),
             "lot_data": {
-                "symbol": symbol,
+                "symbol": symbol.upper(),
                 "lotSize": lot_size,
-                "instrumentType": "EQ"
+                "instrumentType": "FNO"
             },
             "status": "success"
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Error fetching FNO lots for {symbol}: {str(e)}")
+        logger.error(f"❌ Error fetching FNO lot size for {symbol}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch FNO lot size: {str(e)}")
+
+
+@router.get("/fno-lots-all")
+async def fno_lots_all():
+    """
+    Get all FNO lot sizes for all symbols
+    """
+    try:
+        logger.info("Fetching all FNO lot sizes")
+
+        from services.nse_service import nse_service
+
+        # Get all FNO lots data
+        fno_lots_data = await nse_service.fetch_fno_lots()
+
+        if not fno_lots_data:
+            raise HTTPException(status_code=404, detail="No FNO lots data available")
+
+        return {
+            "data": fno_lots_data,
+            "total": len(fno_lots_data),
+            "status": "success",
+            "message": f"Retrieved lot sizes for {len(fno_lots_data)} FNO symbols"
+        }
+
+    except Exception as e:
+        logger.error(f"Error fetching all FNO lots: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch FNO lots: {str(e)}")
 
 @router.get("/option-chain")
@@ -138,7 +159,7 @@ async def compile_option_chain(
         logger.info(f"Compiling option chain for symbol: {symbol}, expiry: {expiry}")
 
         # Get option chain data using the working NSE service
-        from services.nse_service import nse_service
+        from ..services.nse_service import nse_service
         chain_data = await nse_service.fetch_option_chain(symbol)
 
         if not chain_data:

@@ -2,7 +2,6 @@ import httpx
 import asyncio
 from typing import Dict, Any, Optional
 import logging
-from datetime import datetime, timedelta
 from nse import NSE
 
 from services.cache_service import cache_service
@@ -76,7 +75,7 @@ class NSEService:
                     self.cookies.update(dict(response.cookies))
                     logger.info(f"✅ Session established with NSE, got {len(self.cookies)} cookies")
                 else:
-                    logger.warning(f"⚠️ Failed to establish session: {response.status_code}")
+                    logger.warning(f"���️ Failed to establish session: {response.status_code}")
             except Exception as e:
                 logger.error(f"❌ Error establishing session: {e}")
 
@@ -166,6 +165,54 @@ class NSEService:
         except Exception as e:
             logger.error(f"❌ Exception fetching F&O stocks using nse library: {e}")
             raise Exception(f"Failed to fetch F&O stocks: {str(e)}")
+
+    async def fetch_fno_lots(self) -> Dict[str, int]:
+        """Fetch FNO lot sizes from NSE using nse library with caching"""
+        logger.info("🔄 Fetching FNO lot sizes from NSE using nse library")
+
+        # Check cache first (using 'FNO_LOTS' as cache key)
+        cached_data = self._get_cached_data('FNO_LOTS')
+        if cached_data:
+            return cached_data
+
+        logger.info("📡 Cache miss for FNO lots, fetching from NSE using nse library...")
+
+        try:
+            # Initialize NSE client if not done already
+            if not self._client_initialized:
+                self._initialize_nse_client()
+
+            # If NSE client failed to initialize, raise an error
+            if self.nse_client is None:
+                raise Exception("NSE client is not available")
+
+            # Use the correct method to fetch FNO lots
+            fno_lots_data = self.nse_client.fnoLots()
+
+            if fno_lots_data:
+                logger.info(f"✅ Successfully fetched FNO lots for {len(fno_lots_data)} symbols using nse library")
+
+                # Store in cache for 1 hour
+                cache_service.set('FNO_LOTS', fno_lots_data, ttl_minutes=60)
+                logger.info("💾 Cached FNO lots data (expires in 60 minutes)")
+
+                return fno_lots_data
+            else:
+                logger.error("❌ No FNO lots data returned from nse library")
+                raise Exception("No FNO lots data available")
+
+        except Exception as e:
+            logger.error(f"❌ Exception fetching FNO lots using nse library: {e}")
+            raise Exception(f"Failed to fetch FNO lots: {str(e)}")
+
+    async def get_fno_lot_size(self, symbol: str) -> Optional[int]:
+        """Get lot size for a specific FNO symbol"""
+        try:
+            fno_lots_data = await self.fetch_fno_lots()
+            return fno_lots_data.get(symbol.upper())
+        except Exception as e:
+            logger.error(f"❌ Error getting lot size for {symbol}: {e}")
+            return None
 
     async def _reset_session(self):
         """Reset the session and cookies - kept for backward compatibility"""
