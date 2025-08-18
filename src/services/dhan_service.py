@@ -255,7 +255,7 @@ class DhanService:
             )
 
             # Convert to strikes using modular utility function
-            strikes = parse_dhan_response_to_strikes(option_chain, symbol, expiry)
+            strikes = await parse_dhan_response_to_strikes(option_chain, symbol, expiry)
 
             # Calculate additional analytics for all strikes before returning
             strikes_with_analytics = self._calculate_strike_analytics(strikes)

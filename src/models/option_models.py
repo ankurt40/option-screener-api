@@ -75,6 +75,8 @@ class Strike(BaseModel):
     theta: Optional[float] = None
     gamma: Optional[float] = None
     vega: Optional[float] = None
+    # Lot size
+    lotSize: Optional[int] = None
     # Analytics fields
     strikeGap: Optional[float] = None
     strikeGapPercentage: Optional[float] = None

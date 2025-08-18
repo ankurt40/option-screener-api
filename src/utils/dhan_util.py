@@ -8,10 +8,10 @@ import logging
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 from models.option_models import Strike
-
+from services.nse_service import nse_service
 logger = logging.getLogger(__name__)
 
-def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Optional[str] = None) -> List[Strike]:
+async def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Optional[str] = None) -> List[Strike]:
     """
     Parse Dhan API response and convert to list of Strike objects
 
@@ -29,6 +29,10 @@ def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Opt
         # Use provided expiry or default
         expiry_date = expiry if expiry else "2025-08-28"
         formatted_expiry = _format_expiry_date(expiry_date)
+
+        # Fetch lot size for the symbol
+        lot_size = await nse_service.get_fno_lot_size(symbol)
+        logger.info(f"📦 Fetched lot size for {symbol}: {lot_size}")
 
         # Get underlying value from response
         underlying_value = _extract_underlying_value(dhan_response)
@@ -52,7 +56,8 @@ def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Opt
                         formatted_expiry=formatted_expiry,
                         symbol=symbol,
                         ce_data=strike_data['ce'],
-                        underlying_value=underlying_value
+                        underlying_value=underlying_value,
+                        lot_size=lot_size
                     )
                     strikes.append(ce_strike)
 
@@ -63,7 +68,8 @@ def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Opt
                         formatted_expiry=formatted_expiry,
                         symbol=symbol,
                         pe_data=strike_data['pe'],
-                        underlying_value=underlying_value
+                        underlying_value=underlying_value,
+                        lot_size=lot_size
                     )
                     strikes.append(pe_strike)
 
@@ -71,7 +77,7 @@ def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Opt
                 logger.warning(f"⚠️ Skipping invalid strike price: {strike_price_str} - {ve}")
                 continue
 
-        ## logger.info(f"📊 Parsed {len(strikes)} strikes from Dhan response for {symbol}")
+        logger.info(f"📊 Parsed {len(strikes)} strikes from Dhan response for {symbol} with lot size: {lot_size}")
         return strikes
 
     except Exception as e:
@@ -132,7 +138,8 @@ def _create_call_strike(
     formatted_expiry: str,
     symbol: str,
     ce_data: Dict[str, Any],
-    underlying_value: float
+    underlying_value: float,
+    lot_size: int
 ) -> Strike:
     """
     Create a Strike object for Call (CE) option
@@ -143,6 +150,7 @@ def _create_call_strike(
         symbol: Stock symbol
         ce_data: Call option data from Dhan response
         underlying_value: Current price of underlying asset
+        lot_size: Lot size for the option
 
     Returns:
         Strike object for Call option
@@ -176,6 +184,8 @@ def _create_call_strike(
         theta=float(greeks.get('theta', 0)) if greeks.get('theta') is not None else None,
         gamma=float(greeks.get('gamma', 0)) if greeks.get('gamma') is not None else None,
         vega=float(greeks.get('vega', 0)) if greeks.get('vega') is not None else None,
+        # Lot size
+        lotSize=lot_size,
         strikeGap=None,
         strikeGapPercentage=None,
         premiumPercentage=None
@@ -186,7 +196,8 @@ def _create_put_strike(
     formatted_expiry: str,
     symbol: str,
     pe_data: Dict[str, Any],
-    underlying_value: float
+    underlying_value: float,
+    lot_size: int
 ) -> Strike:
     """
     Create a Strike object for Put (PE) option
@@ -197,6 +208,7 @@ def _create_put_strike(
         symbol: Stock symbol
         pe_data: Put option data from Dhan response
         underlying_value: Current price of underlying asset
+        lot_size: Lot size for the option
 
     Returns:
         Strike object for Put option
@@ -230,6 +242,8 @@ def _create_put_strike(
         theta=float(greeks.get('theta', 0)) if greeks.get('theta') is not None else None,
         gamma=float(greeks.get('gamma', 0)) if greeks.get('gamma') is not None else None,
         vega=float(greeks.get('vega', 0)) if greeks.get('vega') is not None else None,
+        # Lot size
+        lotSize=lot_size,
         strikeGap=None,
         strikeGapPercentage=None,
         premiumPercentage=None

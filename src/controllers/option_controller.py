@@ -67,12 +67,8 @@ async def fno_lots(symbol: str = Query(..., description=SYMBOL_DESC)):
 
         return {
             "symbol": symbol.upper(),
-            "lot_data": {
-                "symbol": symbol.upper(),
-                "lotSize": lot_size,
-                "instrumentType": "FNO"
-            },
-            "status": "success"
+            "lotSize": lot_size,
+            "instrumentType": "FNO"
         }
 
     except HTTPException:

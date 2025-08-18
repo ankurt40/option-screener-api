@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/v1/dhan", tags=["Dhan API"])
 # Initialize Dhan service
 dhan_service = DhanService()
 
-def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Optional[str] = None) -> List[Strike]:
+async def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Optional[str] = None) -> List[Strike]:
     """
     Parse Dhan API response and convert to list of Strike objects
     """
@@ -34,6 +34,10 @@ def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Op
             except ValueError:
                 formatted_expiry = expiry_date
 
+        # Fetch lot size for the symbol
+        from services.nse_service import nse_service
+        lot_size = await nse_service.get_fno_lot_size(symbol)
+        logger.info(f"📦 Fetched lot size for {symbol}: {lot_size}")
 
         # Get underlying value from response
         underlying_value = 0
@@ -74,6 +78,8 @@ def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Op
                             askPrice=float(ce_data.get('top_ask_price', 0)),
                             underlyingValue=underlying_value,
                             type="CE",
+                            # Add lot size
+                            lotSize=lot_size,
                             # Initialize analytics fields - will be calculated later
                             strikeGap=None,
                             strikeGapPercentage=None,
@@ -105,6 +111,8 @@ def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Op
                             askPrice=float(pe_data.get('top_ask_price', 0)),
                             underlyingValue=underlying_value,
                             type="PE",
+                            # Add lot size
+                            lotSize=lot_size,
                             # Initialize analytics fields - will be calculated later
                             strikeGap=None,
                             strikeGapPercentage=None,
@@ -118,7 +126,7 @@ def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expiry: Op
         else:
             logger.warning(f"⚠️ No option chain data found in Dhan response")
 
-        logger.info(f"📊 Parsed {len(strikes)} strikes from Dhan response for {symbol}")
+        logger.info(f"📊 Parsed {len(strikes)} strikes from Dhan response for {symbol} with lot size: {lot_size}")
         return strikes
 
     except Exception as e:
@@ -149,7 +157,7 @@ async def get_option_chain(
         )
 
         # Convert to strikes with dynamic expiry
-        strikes = _parse_dhan_response_to_strikes(option_chain, f"SCRIP_{underlying_scrip}", expiry)
+        strikes = await _parse_dhan_response_to_strikes(option_chain, f"SCRIP_{underlying_scrip}", expiry)
 
         # Calculate additional analytics for all strikes before returning
         strikes_with_analytics = dhan_service._calculate_strike_analytics(strikes)
