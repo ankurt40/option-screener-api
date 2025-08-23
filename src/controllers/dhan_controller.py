@@ -133,73 +133,6 @@ async def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expi
         logger.error(f"❌ Error parsing Dhan response to strikes: {e}")
         return []
 
-async def _calculate_margins_for_strikes(all_strikes_for_margin: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """
-    Calculate margins for all strikes using margin service with caching
-
-    Args:
-        all_strikes_for_margin: List of strikes data for margin calculation
-
-    Returns:
-        Dictionary containing margin calculation results or error
-    """
-    margin_lookup = {}
-    if all_strikes_for_margin:
-        try:
-            # Create cache key for margin data based on strikes content
-            import hashlib
-            import json
-
-            # Create a deterministic cache key based on strikes data
-            strikes_hash = hashlib.md5(
-                json.dumps(all_strikes_for_margin, sort_keys=True).encode()
-            ).hexdigest()
-            margin_cache_key = f"margin_data_{strikes_hash}"
-
-            # Check if margin data is already cached
-            cached_margin_data = cache_service.get(margin_cache_key)
-
-            if cached_margin_data:
-                logger.info(f"📦 Using cached margin data for {len(all_strikes_for_margin)} strikes")
-                margin_data = cached_margin_data
-            else:
-                logger.info(f"🧮 Calculating margins for {len(all_strikes_for_margin)} strikes")
-                from services.margin_service import margin_service
-
-                margin_data = await margin_service.calculate_margin_for_strikes(
-                    strikes=all_strikes_for_margin,
-                    quantity=-1  # Default to short position
-                )
-
-                # Cache the margin data for 24 hours (1440 minutes)
-                cache_service.set(margin_cache_key, margin_data, ttl_minutes=1440)
-                logger.info(f"✅ Successfully calculated and cached margins for all strikes")
-
-            # Process margin data to create lookup table
-            if margin_data and 'IndividualPositionsMargin' in margin_data:
-                for position in margin_data['IndividualPositionsMargin']:
-                    try:
-                        ticker = position.get('Ticker', '')
-                        strike = position.get('Strike', 0)
-                        instrument_type = position.get('InstrumentType', '')
-                        span = float(position.get('Span', 0))
-                        exposure = float(position.get('Exposure', 0))
-                        margin_required = span + exposure
-
-                        # Create key to match with strikes
-                        key = f"{ticker}_{strike}_{instrument_type}"
-                        margin_lookup[key] = margin_required
-
-                    except (ValueError, TypeError) as e:
-                        logger.warning(f"⚠️ Error processing margin position: {e}")
-                        continue
-
-        except Exception as margin_error:
-            logger.error(f"❌ Error calculating margins: {margin_error}")
-            margin_lookup = {}
-
-    return margin_lookup
-
 @router.post("/option-chain")
 async def get_option_chain(
     underlying_scrip: int,
@@ -349,8 +282,6 @@ async def get_full_option_chain() -> Dict[str, Any]:
     try:
         logger.info("🎯 Full option chain request for all NSE symbols (2025-09-30) - CACHE ONLY")
 
-
-
         # Fixed expiry date
         expiry_date = "2025-09-30"
 
@@ -391,7 +322,8 @@ async def get_full_option_chain() -> Dict[str, Any]:
                 logger.debug(f"📭 Cache miss for {symbol}")
 
         # Calculate margins for all strikes using margin service
-        margin_lookup = await _calculate_margins_for_strikes(all_strikes_for_margin)
+        from services.margin_service import margin_service
+        margin_lookup = await margin_service.calculate_margins_for_strikes(all_strikes_for_margin)
 
         # Add margin required to each strike in cached data
         for symbol, symbol_data in cached_data.items():

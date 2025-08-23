@@ -165,6 +165,86 @@ class MarginService:
                     cookies[key] = value
         return cookies
 
+    async def calculate_margins_for_strikes(self, all_strikes_for_margin: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Calculate margins for all strikes using margin service with granular per-strike caching
+
+        Args:
+            all_strikes_for_margin: List of strikes data for margin calculation
+
+        Returns:
+            Dictionary containing margin lookup results
+        """
+        from services.cache_service import cache_service
+
+        margin_lookup = {}
+        strikes_to_calculate = []
+
+        if all_strikes_for_margin:
+            try:
+                # Check cache for each individual strike
+                for strike in all_strikes_for_margin:
+                    # Create individual cache key for each strike
+                    strike_cache_key = f"margin_{strike['symbol']}_{strike['strikePrice']}_{strike['type']}"
+
+                    # Check if this specific strike's margin is cached
+                    cached_margin = cache_service.get(strike_cache_key)
+
+                    if cached_margin is not None:
+                        # Use cached margin for this strike
+                        lookup_key = f"{strike['symbol']}_{strike['strikePrice']}_{strike['type']}"
+                        margin_lookup[lookup_key] = cached_margin
+                    else:
+                        # Add to list of strikes that need margin calculation
+                        strikes_to_calculate.append(strike)
+
+                logger.info(f"📦 Found {len(margin_lookup)} cached margins, need to calculate {len(strikes_to_calculate)} new margins")
+
+                # Only call margin service for strikes that aren't cached
+                if strikes_to_calculate:
+                    logger.info(f"🧮 Calculating margins for {len(strikes_to_calculate)} uncached strikes")
+
+                    margin_data = await self.calculate_margin_for_strikes(
+                        strikes=strikes_to_calculate,
+                        quantity=-1  # Default to short position
+                    )
+
+                    # Process margin data and cache each strike individually
+                    if margin_data and 'IndividualPositionsMargin' in margin_data:
+                        for position in margin_data['IndividualPositionsMargin']:
+                            try:
+                                ticker = position.get('Ticker', '')
+                                strike = position.get('Strike', 0)
+                                instrument_type = position.get('InstrumentType', '')
+                                span = float(position.get('Span', 0))
+                                exposure = float(position.get('Exposure', 0))
+                                margin_required = span + exposure
+
+                                # Cache this individual strike's margin for 12 hours
+                                strike_cache_key = f"margin_{ticker}_{strike}_{instrument_type}"
+                                cache_service.set(strike_cache_key, margin_required, ttl_minutes=720)
+
+                                # Add to lookup table
+                                lookup_key = f"{ticker}_{strike}_{instrument_type}"
+                                margin_lookup[lookup_key] = margin_required
+
+                            except (ValueError, TypeError) as e:
+                                logger.warning(f"⚠️ Error processing margin position: {e}")
+                                continue
+
+                    logger.info(f"✅ Successfully calculated and cached margins for {len(strikes_to_calculate)} new strikes")
+                else:
+                    logger.info(f"✅ All margin data found in cache, no API call needed")
+
+            except Exception as margin_error:
+                logger.error(f"❌ Error calculating margins: {margin_error}")
+                # On error, set default margins for uncached strikes
+                for strike in strikes_to_calculate:
+                    lookup_key = f"{strike['symbol']}_{strike['strikePrice']}_{strike['type']}"
+                    margin_lookup[lookup_key] = 0.0
+
+        return margin_lookup
+
     async def calculate_single_position_margin(
         self,
         ticker: str,
