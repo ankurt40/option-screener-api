@@ -27,7 +27,7 @@ async def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expir
 
     try:
         # Use provided expiry or default
-        expiry_date = expiry if expiry else "2025-08-28"
+        expiry_date = expiry if expiry else "2025-09-30"
         formatted_expiry = _format_expiry_date(expiry_date)
 
         # Fetch lot size for the symbol
@@ -51,27 +51,31 @@ async def parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expir
 
                 # Process CE (Call) options
                 if 'ce' in strike_data and strike_data['ce']:
-                    ce_strike = _create_call_strike(
-                        strike_price=strike_price,
-                        formatted_expiry=formatted_expiry,
-                        symbol=symbol,
-                        ce_data=strike_data['ce'],
-                        underlying_value=underlying_value,
-                        lot_size=lot_size
-                    )
-                    strikes.append(ce_strike)
+                    ce_bid_price = float(strike_data['ce'].get('top_bid_price', 0))
+                    if ce_bid_price > 0.1:
+                        ce_strike = _create_call_strike(
+                            strike_price=strike_price,
+                            formatted_expiry=formatted_expiry,
+                            symbol=symbol,
+                            ce_data=strike_data['ce'],
+                            underlying_value=underlying_value,
+                            lot_size=lot_size
+                        )
+                        strikes.append(ce_strike)
 
                 # Process PE (Put) options
                 if 'pe' in strike_data and strike_data['pe']:
-                    pe_strike = _create_put_strike(
-                        strike_price=strike_price,
-                        formatted_expiry=formatted_expiry,
-                        symbol=symbol,
-                        pe_data=strike_data['pe'],
-                        underlying_value=underlying_value,
-                        lot_size=lot_size
-                    )
-                    strikes.append(pe_strike)
+                    pe_bid_price = float(strike_data['pe'].get('top_bid_price', 0))
+                    if pe_bid_price > 0.1:
+                        pe_strike = _create_put_strike(
+                            strike_price=strike_price,
+                            formatted_expiry=formatted_expiry,
+                            symbol=symbol,
+                            pe_data=strike_data['pe'],
+                            underlying_value=underlying_value,
+                            lot_size=lot_size
+                        )
+                        strikes.append(pe_strike)
 
             except ValueError as ve:
                 logger.warning(f"⚠️ Skipping invalid strike price: {strike_price_str} - {ve}")
@@ -158,6 +162,13 @@ def _create_call_strike(
     # Extract Greeks from ce_data
     greeks = ce_data.get('greeks', {})
 
+    # Calculate intrinsic value for Call: max(0, Spot Price - Strike Price)
+    intrinsic_value = max(0, underlying_value - strike_price)
+
+    # Calculate time value: max(0, bid price - intrinsic value)
+    bid_price = float(ce_data.get('top_bid_price', 0))
+    time_value = max(0.0, bid_price - intrinsic_value)
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -174,11 +185,13 @@ def _create_call_strike(
         totalBuyQuantity=0,
         totalSellQuantity=0,
         bidQty=int(ce_data.get('top_bid_quantity', 0)),
-        bidprice=float(ce_data.get('top_bid_price', 0)),
+        bidprice=bid_price,
         askQty=int(ce_data.get('top_ask_quantity', 0)),
         askPrice=float(ce_data.get('top_ask_price', 0)),
         underlyingValue=underlying_value,
         type="CE",
+        # Intrinsic value
+        intrinsicValue=intrinsic_value,
         # Greeks
         delta=float(greeks.get('delta', 0)) if greeks.get('delta') is not None else None,
         theta=float(greeks.get('theta', 0)) if greeks.get('theta') is not None else None,
@@ -188,7 +201,8 @@ def _create_call_strike(
         lotSize=lot_size,
         strikeGap=None,
         strikeGapPercentage=None,
-        premiumPercentage=None
+        premiumPercentage=None,
+        timeValue=time_value
     )
 
 def _create_put_strike(
@@ -216,6 +230,13 @@ def _create_put_strike(
     # Extract Greeks from pe_data
     greeks = pe_data.get('greeks', {})
 
+    # Calculate intrinsic value for Put: max(0, Strike Price - Spot Price)
+    intrinsic_value = max(0, strike_price - underlying_value)
+
+    # Calculate time value: max(0, bid price - intrinsic value)
+    bid_price = float(pe_data.get('top_bid_price', 0))
+    time_value = max(0.0, bid_price - intrinsic_value)
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -232,11 +253,13 @@ def _create_put_strike(
         totalBuyQuantity=0,
         totalSellQuantity=0,
         bidQty=int(pe_data.get('top_bid_quantity', 0)),
-        bidprice=float(pe_data.get('top_bid_price', 0)),
+        bidprice=bid_price,
         askQty=int(pe_data.get('top_ask_quantity', 0)),
         askPrice=float(pe_data.get('top_ask_price', 0)),
         underlyingValue=underlying_value,
         type="PE",
+        # Intrinsic value
+        intrinsicValue=intrinsic_value,
         # Greeks
         delta=float(greeks.get('delta', 0)) if greeks.get('delta') is not None else None,
         theta=float(greeks.get('theta', 0)) if greeks.get('theta') is not None else None,
@@ -246,5 +269,6 @@ def _create_put_strike(
         lotSize=lot_size,
         strikeGap=None,
         strikeGapPercentage=None,
-        premiumPercentage=None
+        premiumPercentage=None,
+        timeValue=time_value
     )

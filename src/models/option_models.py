@@ -70,6 +70,8 @@ class Strike(BaseModel):
     askPrice: float
     underlyingValue: float
     type: str  # "PE" or "CE"
+    # Intrinsic value
+    intrinsicValue: Optional[float] = None
     # Greeks
     delta: Optional[float] = None
     theta: Optional[float] = None
@@ -81,6 +83,7 @@ class Strike(BaseModel):
     strikeGap: Optional[float] = None
     strikeGapPercentage: Optional[float] = None
     premiumPercentage: Optional[float] = None
+    timeValue: Optional[float] = None
 
 class VolatileOptionsResponse(BaseModel):
     success: bool

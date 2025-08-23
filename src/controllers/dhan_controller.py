@@ -22,7 +22,7 @@ async def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expi
 
     try:
         # Use provided expiry or default
-        expiry_date = expiry if expiry else "2025-08-28"
+        expiry_date = expiry if expiry else "2025-09-30"
 
         # Convert expiry format if needed (from YYYY-MM-DD to DD-MMM-YYYY)
         formatted_expiry = expiry_date
@@ -274,18 +274,18 @@ async def clear_cache():
 @router.get("/get_full_option_chain")
 async def get_full_option_chain() -> Dict[str, Any]:
     """
-    Get full option chain data for all NSE symbols for 2025-08-28 from cache only
+    Get full option chain data for all NSE symbols for 2025-09-30 from cache only
 
     Returns:
         Dictionary containing option chain data for all cached symbols
     """
     try:
-        logger.info("🎯 Full option chain request for all NSE symbols (2025-08-28) - CACHE ONLY")
+        logger.info("🎯 Full option chain request for all NSE symbols (2025-09-30) - CACHE ONLY")
 
 
 
         # Fixed expiry date
-        expiry_date = "2025-08-28"
+        expiry_date = "2025-09-30"
 
         # Get all FNO symbols for NSE
         nse_symbols = []

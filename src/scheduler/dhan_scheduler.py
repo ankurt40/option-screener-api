@@ -33,7 +33,7 @@ class DhanScheduler:
 
         # Fixed parameters
         self.exchange = "NSE"
-        self.expiry = "2025-08-28"
+        self.expiry = "2025-09-30"
 
         logger.info("🕒 Dhan Scheduler initialized")
 

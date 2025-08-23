@@ -154,6 +154,7 @@ class DhanService:
         - strike_gap = underlyingValue - strikePrice
         - strike_gap_percentage = (strike_gap / underlyingValue) * 100
         - premium_percentage = (lastPrice / underlyingValue) * 100
+        - time_value = Option Premium - Intrinsic Value
 
         Args:
             strikes: List of Strike objects to enhance with analytics
@@ -237,7 +238,7 @@ class DhanService:
 
         try:
             # Check cache first before making API call
-            expiry_date = expiry if expiry else "2025-08-28"  # Use provided expiry or default
+            expiry_date = expiry if expiry else "2025-09-30"  # Use provided expiry or default
             cache_key = f"{symbol.upper()}_{expiry_date}"
 
             cached_strikes = cache_service.get(cache_key)

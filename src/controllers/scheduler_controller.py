@@ -39,7 +39,7 @@ async def start_scheduler() -> Dict[str, Any]:
             "message": "Dhan scheduler started successfully",
             "interval_minutes": 55,
             "exchange": "NSE",
-            "expiry": "2025-08-28",
+            "expiry": "2025-09-30",
             "timestamp": datetime.now().isoformat()
         }
 
