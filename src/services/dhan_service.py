@@ -93,7 +93,7 @@ class DhanService:
                 "Expiry": expiry
             }
 
-            await asyncio.sleep(2)
+            await asyncio.sleep(5)
 
             async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
                 response = await client.post(
@@ -166,7 +166,7 @@ class DhanService:
         for strike in strikes:
             try:
                 # Calculate strike gap (difference between underlying price and strike price)
-                strike.strikeGap = strike.underlyingValue - strike.strikePrice
+                strike.strikeGap = strike.strikePrice - strike.underlyingValue
 
                 # Calculate strike gap percentage
                 if strike.underlyingValue > 0:
@@ -176,7 +176,7 @@ class DhanService:
 
                 # Calculate premium percentage (option price as percentage of underlying)
                 if strike.underlyingValue > 0:
-                    strike.premiumPercentage = (strike.lastPrice / strike.underlyingValue) * 100
+                    strike.premiumPercentage = (strike.bidprice / strike.underlyingValue) * 100
                 else:
                     strike.premiumPercentage = 0.0
 
