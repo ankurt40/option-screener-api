@@ -84,6 +84,10 @@ class Strike(BaseModel):
     strikeGapPercentage: Optional[float] = None
     premiumPercentage: Optional[float] = None
     timeValue: Optional[float] = None
+    fullExposure: Optional[float] = None
+    maxRisk: Optional[float] = None
+    returnOnMaxRisk: Optional[float] = None
+    marginRequired: Optional[float] = None
 
 class VolatileOptionsResponse(BaseModel):
     success: bool

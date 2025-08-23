@@ -25,6 +25,7 @@ from controllers.list_stocks_controller import router as list_stocks_router
 from controllers.cache_controller import router as cache_router
 from controllers.dhan_controller import router as dhan_router
 from controllers.scheduler_controller import router as scheduler_router
+from controllers.margin_controller import router as margin_router
 from models.option_models import HealthResponse
 
 # Configure logging
@@ -61,6 +62,7 @@ app.include_router(list_stocks_router)
 app.include_router(cache_router)
 app.include_router(dhan_router)
 app.include_router(scheduler_router)
+app.include_router(margin_router)
 
 @app.get("/", response_model=HealthResponse)
 async def root():

@@ -169,6 +169,15 @@ def _create_call_strike(
     bid_price = float(ce_data.get('top_bid_price', 0))
     time_value = max(0.0, bid_price - intrinsic_value)
 
+    # Calculate full exposure: Lot Size × Strike Price
+    full_exposure = lot_size * strike_price
+
+    # Calculate max risk: Full Exposure - bidprice
+    max_risk = full_exposure - bid_price
+
+    # Calculate return on max risk: bidPrice/maxRisk
+    return_on_max_risk = round((bid_price / max_risk) if max_risk > 0 else 0.0, 2)
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -202,7 +211,10 @@ def _create_call_strike(
         strikeGap=None,
         strikeGapPercentage=None,
         premiumPercentage=None,
-        timeValue=time_value
+        timeValue=time_value,
+        fullExposure=full_exposure,
+        maxRisk=max_risk,
+        returnOnMaxRisk=return_on_max_risk
     )
 
 def _create_put_strike(
@@ -237,6 +249,15 @@ def _create_put_strike(
     bid_price = float(pe_data.get('top_bid_price', 0))
     time_value = max(0.0, bid_price - intrinsic_value)
 
+    # Calculate full exposure: Lot Size × Strike Price
+    full_exposure = lot_size * strike_price
+
+    # Calculate max risk: Full Exposure - bidprice
+    max_risk = full_exposure - bid_price
+
+    # Calculate return on max risk: bidPrice/maxRisk
+    return_on_max_risk = round((bid_price / max_risk) if max_risk > 0 else 0.0, 2)
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -270,5 +291,8 @@ def _create_put_strike(
         strikeGap=None,
         strikeGapPercentage=None,
         premiumPercentage=None,
-        timeValue=time_value
+        timeValue=time_value,
+        fullExposure=full_exposure,
+        maxRisk=max_risk,
+        returnOnMaxRisk=return_on_max_risk
     )

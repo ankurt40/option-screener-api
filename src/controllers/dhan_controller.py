@@ -133,6 +133,73 @@ async def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expi
         logger.error(f"❌ Error parsing Dhan response to strikes: {e}")
         return []
 
+async def _calculate_margins_for_strikes(all_strikes_for_margin: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Calculate margins for all strikes using margin service with caching
+
+    Args:
+        all_strikes_for_margin: List of strikes data for margin calculation
+
+    Returns:
+        Dictionary containing margin calculation results or error
+    """
+    margin_lookup = {}
+    if all_strikes_for_margin:
+        try:
+            # Create cache key for margin data based on strikes content
+            import hashlib
+            import json
+
+            # Create a deterministic cache key based on strikes data
+            strikes_hash = hashlib.md5(
+                json.dumps(all_strikes_for_margin, sort_keys=True).encode()
+            ).hexdigest()
+            margin_cache_key = f"margin_data_{strikes_hash}"
+
+            # Check if margin data is already cached
+            cached_margin_data = cache_service.get(margin_cache_key)
+
+            if cached_margin_data:
+                logger.info(f"📦 Using cached margin data for {len(all_strikes_for_margin)} strikes")
+                margin_data = cached_margin_data
+            else:
+                logger.info(f"🧮 Calculating margins for {len(all_strikes_for_margin)} strikes")
+                from services.margin_service import margin_service
+
+                margin_data = await margin_service.calculate_margin_for_strikes(
+                    strikes=all_strikes_for_margin,
+                    quantity=-1  # Default to short position
+                )
+
+                # Cache the margin data for 24 hours (1440 minutes)
+                cache_service.set(margin_cache_key, margin_data, ttl_minutes=1440)
+                logger.info(f"✅ Successfully calculated and cached margins for all strikes")
+
+            # Process margin data to create lookup table
+            if margin_data and 'IndividualPositionsMargin' in margin_data:
+                for position in margin_data['IndividualPositionsMargin']:
+                    try:
+                        ticker = position.get('Ticker', '')
+                        strike = position.get('Strike', 0)
+                        instrument_type = position.get('InstrumentType', '')
+                        span = float(position.get('Span', 0))
+                        exposure = float(position.get('Exposure', 0))
+                        margin_required = span + exposure
+
+                        # Create key to match with strikes
+                        key = f"{ticker}_{strike}_{instrument_type}"
+                        margin_lookup[key] = margin_required
+
+                    except (ValueError, TypeError) as e:
+                        logger.warning(f"⚠️ Error processing margin position: {e}")
+                        continue
+
+        except Exception as margin_error:
+            logger.error(f"❌ Error calculating margins: {margin_error}")
+            margin_lookup = {}
+
+    return margin_lookup
+
 @router.post("/option-chain")
 async def get_option_chain(
     underlying_scrip: int,
@@ -296,15 +363,23 @@ async def get_full_option_chain() -> Dict[str, Any]:
 
         # Collect cached data for all symbols
         cached_data = {}
-        cache_hits = 0
-        cache_misses = 0
+        all_strikes_for_margin = []
 
         for symbol in nse_symbols:
             cache_key = f"{symbol.upper()}_{expiry_date}"
             cached_strikes = cache_service.get(cache_key)
 
             if cached_strikes:
-                cache_hits += 1
+                # Prepare strikes for margin calculation
+                for strike in cached_strikes:
+                    strike_for_margin = {
+                        "symbol": symbol,
+                        "strikePrice": strike.strikePrice,
+                        "expiryDate": strike.expiryDate,
+                        "type": strike.type
+                    }
+                    all_strikes_for_margin.append(strike_for_margin)
+
                 cached_data[symbol] = {
                     "symbol": symbol,
                     "expiry_date": expiry_date,
@@ -313,25 +388,35 @@ async def get_full_option_chain() -> Dict[str, Any]:
                 }
                 logger.debug(f"📦 Cache hit for {symbol}: {len(cached_strikes)} strikes")
             else:
-                cache_misses += 1
                 logger.debug(f"📭 Cache miss for {symbol}")
+
+        # Calculate margins for all strikes using margin service
+        margin_lookup = await _calculate_margins_for_strikes(all_strikes_for_margin)
+
+        # Add margin required to each strike in cached data
+        for symbol, symbol_data in cached_data.items():
+            for strike in symbol_data["strikes"]:
+                # Create lookup key to match with margin data
+                margin_key = f"{symbol}_{strike.strikePrice}_{strike.type}"
+                margin_required = margin_lookup.get(margin_key, 0.0)
+
+                # Add marginRequired field to strike (multiplied by lot size and rounded to 2 decimal places)
+                strike.marginRequired = round(margin_required * (strike.lotSize or 1), 2)
 
         # Prepare response
         response_data = {
             "success": True,
-            "message": f"Full option chain data retrieved from cache for {cache_hits} symbols",
+            "message": f"Full option chain data retrieved from cache for {len(cached_data)} symbols",
             "expiry_date": expiry_date,
             "total_symbols_checked": len(nse_symbols),
-            "cache_hits": cache_hits,
-            "cache_misses": cache_misses,
             "symbols_with_data": list(cached_data.keys()),
+            "total_strikes_for_margin": len(all_strikes_for_margin),
             "data": cached_data,
-            "cache_hit_rate": round((cache_hits / len(nse_symbols) * 100), 2) if nse_symbols else 0,
+            "symbols_found_count": len(cached_data),
             "timestamp": datetime.now().isoformat()
         }
 
-        logger.info(f"✅ Full option chain request completed: {cache_hits}/{len(nse_symbols)} symbols found in cache")
-        logger.info(f"📈 Cache hit rate: {response_data['cache_hit_rate']}%")
+        logger.info(f"✅ Full option chain request completed: {len(cached_data)} symbols found in cache")
 
         return response_data
 

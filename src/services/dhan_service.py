@@ -167,21 +167,26 @@ class DhanService:
         for strike in strikes:
             try:
                 # Calculate strike gap (difference between underlying price and strike price)
-                strike.strikeGap = strike.strikePrice - strike.underlyingValue
+                strike.strikeGap = round(strike.strikePrice - strike.underlyingValue, 2)
 
                 # Calculate strike gap percentage
                 if strike.underlyingValue > 0:
-                    strike.strikeGapPercentage = (strike.strikeGap / strike.underlyingValue) * 100
+                    strike.strikeGapPercentage = round((strike.strikeGap / strike.underlyingValue) * 100, 2)
                 else:
                     strike.strikeGapPercentage = 0.0
 
                 # Calculate premium percentage (option price as percentage of underlying)
                 if strike.underlyingValue > 0:
-                    strike.premiumPercentage = (strike.bidprice / strike.underlyingValue) * 100
+                    strike.premiumPercentage = round((strike.bidprice / strike.underlyingValue) * 100, 2)
                 else:
                     strike.premiumPercentage = 0.0
 
-                logger.debug(f"📊 Strike {strike.strikePrice}: gap={strike.strikeGap:.2f}, gap%={strike.strikeGapPercentage:.2f}%, premium%={strike.premiumPercentage:.4f}%")
+                # Calculate Time Value = Option Premium - Intrinsic Value
+                option_premium = strike.lastPrice if strike.lastPrice > 0 else strike.bidprice
+                intrinsic_value = strike.intrinsicValue if strike.intrinsicValue is not None else 0.0
+                strike.timeValue = round(max(0.0, option_premium - intrinsic_value), 2)
+
+                logger.debug(f"📊 Strike {strike.strikePrice}: gap={strike.strikeGap:.2f}, gap%={strike.strikeGapPercentage:.2f}%, premium%={strike.premiumPercentage:.4f}%, timeValue={strike.timeValue:.2f}")
 
             except Exception as e:
                 logger.warning(f"⚠️ Error calculating analytics for strike {strike.strikePrice}: {e}")
@@ -189,6 +194,7 @@ class DhanService:
                 strike.strikeGap = 0.0
                 strike.strikeGapPercentage = 0.0
                 strike.premiumPercentage = 0.0
+                strike.timeValue = 0.0
 
        # logger.info(f"✅ Completed strike analytics calculation for {len(strikes)} strikes")
         return strikes
