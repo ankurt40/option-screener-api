@@ -1,8 +1,7 @@
-import datetime
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List, Dict, Any
 import logging
-from datetime import datetime
+from datetime import datetime as dt
 from services.dhan_service import DhanService
 from models.option_models import Strike
 from services.cache_service import cache_service
@@ -27,9 +26,8 @@ async def _parse_dhan_response_to_strikes(dhan_response: dict, symbol: str, expi
         # Convert expiry format if needed (from YYYY-MM-DD to DD-MMM-YYYY)
         formatted_expiry = expiry_date
         if expiry and len(expiry) == 10 and expiry.count('-') == 2:
-            from datetime import datetime
             try:
-                date_obj = datetime.strptime(expiry, "%Y-%m-%d")
+                date_obj = dt.strptime(expiry, "%Y-%m-%d")
                 formatted_expiry = date_obj.strftime("%d-%b-%Y")
             except ValueError:
                 formatted_expiry = expiry_date
@@ -345,7 +343,7 @@ async def get_full_option_chain() -> Dict[str, Any]:
             "total_strikes_for_margin": len(all_strikes_for_margin),
             "data": cached_data,
             "symbols_found_count": len(cached_data),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": dt.now().isoformat()
         }
 
         logger.info(f"✅ Full option chain request completed: {len(cached_data)} symbols found in cache")

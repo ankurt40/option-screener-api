@@ -2,6 +2,7 @@ import httpx
 import asyncio
 from typing import Dict, Any, Optional
 import logging
+from datetime import datetime as dt, timedelta
 from nse import NSE
 
 from services.cache_service import cache_service
@@ -213,6 +214,50 @@ class NSEService:
         except Exception as e:
             logger.error(f"❌ Error getting lot size for {symbol}: {e}")
             return None
+
+    async def fetch_fno_bhavcopy(self) -> Dict[str, Any]:
+        """
+        Fetch FNO Bhavcopy data using NSE library
+
+        Returns:
+            Dictionary containing FNO Bhavcopy data
+        """
+        try:
+            logger.info("🔄 Fetching FNO Bhavcopy data using NSE library...")
+
+            # Check cache first
+            cached_data = cache_service.get('FNO_BHAVCOPY')
+            if cached_data:
+                logger.info("📦 Cache hit for FNO Bhavcopy data")
+                return cached_data
+
+            # Initialize NSE client if not done already
+            if not self._client_initialized:
+                self._initialize_nse_client()
+
+            # If NSE client failed to initialize, raise an error
+            if self.nse_client is None:
+                raise Exception("NSE client is not available")
+
+            # Use yesterday's date for FNO Bhavcopy
+            yesterday = (dt.now() - timedelta(days=1)).strftime('%d-%m-%Y')
+            fno_bhavcopy_data = self.nse_client.fnoBhavcopy(date=yesterday)
+
+            if fno_bhavcopy_data:
+                logger.info(f"✅ Successfully fetched FNO Bhavcopy data for {yesterday} with {len(fno_bhavcopy_data)} records using nse library")
+
+                # Store in cache for 1 hour
+                cache_service.set('FNO_BHAVCOPY', fno_bhavcopy_data, ttl_minutes=60)
+                logger.info("💾 Cached FNO Bhavcopy data (expires in 60 minutes)")
+
+                return fno_bhavcopy_data
+            else:
+                logger.error(f"❌ No FNO Bhavcopy data returned from nse library for {yesterday}")
+                raise Exception("No FNO Bhavcopy data available")
+
+        except Exception as e:
+            logger.error(f"❌ Exception fetching FNO Bhavcopy using nse library: {e}")
+            raise Exception(f"Failed to fetch FNO Bhavcopy: {str(e)}")
 
     async def _reset_session(self):
         """Reset the session and cookies - kept for backward compatibility"""
