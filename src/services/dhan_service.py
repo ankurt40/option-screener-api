@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class DhanService:
     def __init__(self):
         self.base_url = "https://api.dhan.co/v2"
-        self.access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzU3MzI2MTU3LCJ0b2tlbkNvbnN1bWVyVHlwZSI6IlNFTEYiLCJ3ZWJob29rVXJsIjoiIiwiZGhhbkNsaWVudElkIjoiMTEwODA2NjUzMCJ9.YnPPDghUzQ7QORhK6DSflk12hNyJzydD59KnNHA6nFPmH8-3Tk20HkXXUTidMyvwdahOPoqL6XgnTMp2-ooQ0g"
+        self.access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzU5OTQzNDQ2LCJpYXQiOjE3NTczNTE0NDYsInRva2VuQ29uc3VtZXJUeXBlIjoiU0VMRiIsIndlYmhvb2tVcmwiOiIiLCJkaGFuQ2xpZW50SWQiOiIxMTA4MDY2NTMwIn0.9LEk_m-hXpY5oMvEETDgjsBh2ERj9z4QQ68ZgU453U87mIerShvRzDmrc5rTw73V3KC8A4Zy5nI4oQ1yAQemyQ"
         self.client_id = "1108066530"
         self.cache = {}
         self.cache_duration = timedelta(hours=1)

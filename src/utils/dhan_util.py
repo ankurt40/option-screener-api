@@ -137,6 +137,51 @@ def _extract_option_chain(dhan_response: dict) -> Optional[Dict[str, Any]]:
         return dhan_response['data']['oc']
     return None
 
+def _determine_strike_category(underlying_value: float, strike_price: float, option_type: str) -> str:
+    """
+    Determine strike category (ITM/ATM/OTM) with distance bucket based on underlying value and strike price
+
+    Args:
+        underlying_value: Current price of underlying asset
+        strike_price: Strike price of the option
+        option_type: "CE" for Call or "PE" for Put
+
+    Returns:
+        Enhanced strike category with distance bucket:
+        - ATM zone: Diff% ≤ 2
+        - Near: 2 < Diff% ≤ 8
+        - Far: Diff% > 8
+    """
+    # Calculate percentage difference
+    diff_percentage = abs((underlying_value - strike_price) / underlying_value) * 100
+
+    # Determine distance bucket - Near (2-5%) and Far (>5%) logic
+    if 2 <= diff_percentage <= 5:
+        distance_bucket = "Near"
+    else:
+        distance_bucket = "Far"
+
+    # Determine basic moneyness
+    if option_type == "CE":
+        # Call Option: ITM if S > K, ATM if S = K, OTM if S < K
+        if underlying_value > strike_price:
+            moneyness = "ITM"
+        elif underlying_value == strike_price:
+            moneyness = "ATM"
+        else:
+            moneyness = "OTM"
+    else:  # PE
+        # Put Option: ITM if S < K, ATM if S = K, OTM if S > K
+        if underlying_value < strike_price:
+            moneyness = "ITM"
+        elif underlying_value == strike_price:
+            moneyness = "ATM"
+        else:
+            moneyness = "OTM"
+
+    # Combine moneyness with distance bucket
+    return f"{distance_bucket} {moneyness}"
+
 def _create_call_strike(
     strike_price: float,
     formatted_expiry: str,
@@ -178,6 +223,9 @@ def _create_call_strike(
     # Calculate return on max risk: bidPrice/maxRisk
     return_on_max_risk = round((bid_price / max_risk) if max_risk > 0 else 0.0, 2)
 
+    # Determine strike category using helper function
+    strike_category = _determine_strike_category(underlying_value, strike_price, "CE")
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -214,7 +262,8 @@ def _create_call_strike(
         timeValue=time_value,
         fullExposure=full_exposure,
         maxRisk=max_risk,
-        returnOnMaxRisk=return_on_max_risk
+        returnOnMaxRisk=return_on_max_risk,
+        strikeCategory=strike_category
     )
 
 def _create_put_strike(
@@ -258,6 +307,9 @@ def _create_put_strike(
     # Calculate return on max risk: bidPrice/maxRisk
     return_on_max_risk = round((bid_price / max_risk) if max_risk > 0 else 0.0, 2)
 
+    # Determine strike category using helper function
+    strike_category = _determine_strike_category(underlying_value, strike_price, "PE")
+
     return Strike(
         strikePrice=strike_price,
         expiryDate=formatted_expiry,
@@ -294,5 +346,6 @@ def _create_put_strike(
         timeValue=time_value,
         fullExposure=full_exposure,
         maxRisk=max_risk,
-        returnOnMaxRisk=return_on_max_risk
+        returnOnMaxRisk=return_on_max_risk,
+        strikeCategory=strike_category
     )

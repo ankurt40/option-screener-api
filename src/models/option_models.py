@@ -88,6 +88,9 @@ class Strike(BaseModel):
     maxRisk: Optional[float] = None
     returnOnMaxRisk: Optional[float] = None
     marginRequired: Optional[float] = None
+    percentageGain: Optional[float] = None
+    totalPremium: Optional[float] = None
+    strikeCategory: Optional[str] = None  # ITM, ATM, OTM
 
 class VolatileOptionsResponse(BaseModel):
     success: bool

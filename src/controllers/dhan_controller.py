@@ -333,6 +333,18 @@ async def get_full_option_chain() -> Dict[str, Any]:
                 # Add marginRequired field to strike (multiplied by lot size and rounded to 2 decimal places)
                 strike.marginRequired = round(margin_required * (strike.lotSize or 1), 2)
 
+                # Calculate totalPremium = premium * lot_size
+                premium = strike.bidprice or 0.0
+                lot_size = strike.lotSize or 1
+                strike.totalPremium = round(premium * lot_size, 2)
+
+                # Calculate percentage gain = (premium * lotSize) / marginRequired * 100 (as percentage)
+                if strike.marginRequired and strike.marginRequired > 0:
+                    percentage_gain = (strike.totalPremium / strike.marginRequired) * 100
+                    strike.percentageGain = round(percentage_gain, 2)  # Round to 2 decimal places for percentage
+                else:
+                    strike.percentageGain = 0.0
+
         # Prepare response
         response_data = {
             "success": True,
